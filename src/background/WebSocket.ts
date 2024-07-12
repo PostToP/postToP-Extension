@@ -1,9 +1,9 @@
 import { MessageType } from "../interface";
 
 export let webSocket: WebSocket | null = null;
-
+export let webSocketURL: string = "ws://localhost:8080";
 export function connect() {
-  webSocket = new WebSocket("ws://localhost:8080");
+  webSocket = new WebSocket(webSocketURL);
 
   webSocket.onopen = (event) => {
     console.log("websocket open");
@@ -20,9 +20,15 @@ export function connect() {
   };
 }
 
-function disconnect() {
+function disconnectWebsocket() {
   if (webSocket == null) return;
   webSocket.close();
+}
+
+export function changeWebsocketURL(url: string) {
+  disconnectWebsocket();
+  webSocketURL = url;
+  connect();
 }
 
 function heartbeat() {

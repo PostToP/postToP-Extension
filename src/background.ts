@@ -1,4 +1,8 @@
-import { connect, sendMessageToWebSocket } from "./background/WebSocket";
+import {
+  changeWebsocketURL,
+  connect,
+  sendMessageToWebSocket,
+} from "./background/WebSocket";
 import { MessageType } from "./interface";
 import "./background/PopupEventListener";
 
@@ -26,6 +30,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.storage.local.get(["settings"], function (result) {
   listenOnYt = result.settings.yt;
   listenOnYtMusic = result.settings.ytmusic;
+  changeWebsocketURL(result.settings.webSocketURL);
 });
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -33,7 +38,5 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   listenOnYt = changes["settings"].newValue["yt"];
   listenOnYtMusic = changes["settings"].newValue["ytmusic"];
 });
-
-connect();
 
 chrome.tabs.onUpdated.addListener(handleUpdated);

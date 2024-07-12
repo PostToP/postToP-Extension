@@ -2,19 +2,24 @@ import "./popup/Serialization";
 
 // Popup to background
 document.addEventListener("DOMContentLoaded", function () {
-  chrome.runtime.sendMessage({ message: "getData" }, function (response) {
-    const contentElement = document.getElementById(
-      "websocketStatus"
-    ) as HTMLElement;
-    contentElement.innerText =
-      response.data == 1 ? "Connected" : "Disconnected";
-    if (response.data == 1)
-      document
-        .getElementById("connectedSettingsForm")
-        ?.classList.remove("hidden");
-    else
-      document.getElementById("connectedSettingsForm")?.classList.add("hidden");
-  });
+  chrome.runtime.sendMessage(
+    { message: "websocketStatus" },
+    function (response) {
+      const contentElement = document.getElementById(
+        "websocketStatus"
+      ) as HTMLElement;
+      contentElement.innerText =
+        response.data == 1 ? "Connected" : "Disconnected";
+      if (response.data == 1)
+        document
+          .getElementById("connectedSettingsForm")
+          ?.classList.remove("hidden");
+      else
+        document
+          .getElementById("connectedSettingsForm")
+          ?.classList.add("hidden");
+    }
+  );
 });
 
 document.getElementById("yt")?.addEventListener("click", handleYTClick);
@@ -39,3 +44,6 @@ function handleLogChange() {
     chrome.tabs.sendMessage(tabs[0].id as number, logLevel);
   });
 }
+
+const settingsForm = document.getElementById("settingsForm") as HTMLFormElement;
+settingsForm.addEventListener("submit", (e) => e.preventDefault());

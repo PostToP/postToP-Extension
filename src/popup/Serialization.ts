@@ -4,22 +4,27 @@ const ytCheckboxElement = document.getElementById("yt") as HTMLInputElement;
 const ytmusicCheckboxElement = document.getElementById(
   "ytmusic"
 ) as HTMLInputElement;
+const webSocketURLElement = document.getElementById(
+  "webSocketURL"
+) as HTMLInputElement;
 
 function handleSave() {
   let settings = {
     logLevel: logLevelElement.value,
     yt: ytCheckboxElement.checked,
     ytmusic: ytmusicCheckboxElement.checked,
+    webSocketURL: webSocketURLElement.value,
   };
   chrome.storage.local.set({ settings });
 }
 
 function handleLoad() {
   chrome.storage.local.get(["settings"], function (result) {
-    let { logLevel, yt, ytmusic } = result.settings;
+    let { logLevel, yt, ytmusic, webSocketURL } = result.settings;
     logLevelElement.value = logLevel ?? "Info";
     ytCheckboxElement.checked = yt ?? false;
     ytmusicCheckboxElement.checked = ytmusic ?? false;
+    webSocketURLElement.value = webSocketURL ?? "ws://localhost:8080";
   });
 }
 
