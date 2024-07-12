@@ -43,17 +43,28 @@ function waitforElement(selector: string): Promise<Element> {
   });
 }
 
-function determineIfSong() {
-  const { hostname } = document.location;
+async function determineIfSong() {
+  const { hostname, href } = document.location;
   if (hostname === "music.youtube.com") return true;
+  const watchID = href.match(/v=([^&#]{5,})/)?.[1];
+  const lemnsolife = await fetch(
+    "https://yt.lemnoslife.com/videos?part=music&id=" + watchID
+  );
+  const json = await lemnsolife.json();
+  return json.items[0].music.available;
 }
 
 let lastplayedID: string;
-function handleNewMusic(videoElement: HTMLVideoElement) {
+async function handleNewMusic(videoElement: HTMLVideoElement) {
   if (lastplayedID === videoElement.src) return;
   lastplayedID = videoElement.src;
-  log("New music detected");
 
+  const isSong = await determineIfSong();
+  if (!isSong) {
+    log("Not a song");
+    return;
+  }
+  log("New music detected");
   let data = pullData();
 
   log(`---------
