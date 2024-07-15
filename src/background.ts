@@ -1,6 +1,5 @@
 import {
   changeWebsocketURL,
-  connect,
   sendMessageToWebSocket,
 } from "./background/WebSocket";
 import { MessageType } from "./interface";
@@ -16,13 +15,13 @@ function handleUpdated(tabId: any, changeInfo: any, tabInfo: any) {
     (listenOnYt && tabInfo.url.startsWith("https://www.youtube.com/watch?v="))
   ) {
     chrome.scripting.executeScript({
-      target: { tabId: tabId, allFrames: true },
+      target: { tabId: tabId },
       files: ["js/content_script.js"],
     });
   }
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "MUSIC_STARTED")
     sendMessageToWebSocket(MessageType.MUSIC, message.payload);
 });

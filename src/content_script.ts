@@ -1,6 +1,14 @@
 import { log } from "./script/Logging";
 import { forwardToWebsocket } from "./script/WebSocket";
 
+// @ts-ignore
+if (!window.__postToPInjected) {
+  // @ts-ignore
+  window.__postToPInjected = true;
+} else {
+  throw Error("Already injected");
+}
+
 log("content_script.ts called");
 
 function pullData() {
@@ -95,7 +103,7 @@ function ensureSingleMounting(Element: Element) {
 }
 
 function mount(videoElement: HTMLVideoElement) {
-  ensureSingleMounting(videoElement);
+  // ensureSingleMounting(videoElement);
   if (!videoElement.paused) handleNewMusic(videoElement);
   videoElement.addEventListener("play", () => handleNewMusic(videoElement));
   videoElement.addEventListener("play", handleResume);
