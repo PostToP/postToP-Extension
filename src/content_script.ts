@@ -1,6 +1,6 @@
+import { Decision } from "./interface";
 import { log } from "./script/Logging";
 import { forwardToWebsocket } from "./script/WebSocket";
-
 // @ts-ignore
 if (!window.__postToPInjected) {
   // @ts-ignore
@@ -8,7 +8,6 @@ if (!window.__postToPInjected) {
 } else {
   throw Error("Already injected");
 }
-
 log("content_script.ts called");
 
 function pullData() {
@@ -51,24 +50,45 @@ function waitforElement(selector: string): Promise<Element> {
   });
 }
 
-async function determineIfSong() {
+async function determineIfSongDOM() {
   const { hostname, href } = document.location;
-  if (hostname === "music.youtube.com") return true;
+  if (hostname === "music.youtube.com") return Decision.YES;
+  const videoInfoDOM = document.getElementById("above-the-fold");
+  const temp = videoInfoDOM?.querySelector(
+    "yt-formatted-string#title.style-scope.ytd-rich-list-header-renderer"
+  )?.innerHTML;
+  if (temp === "Music") return Decision.YES;
+  if (temp === "Shorts remixing this video") return Decision.YES;
+
+  return Decision.MAYBE;
+}
+
+async function determineIfSongYTAPI() {
+  const { hostname, href } = document.location;
+
   const watchID = href.match(/v=([^&#]{5,})/)?.[1];
   const lemnsolife = await fetch(
     "https://yt.lemnoslife.com/videos?part=music&id=" + watchID
   );
   const json = await lemnsolife.json();
-  return json.items[0].music.available;
+  return json.items[0].music.available ? Decision.YES : Decision.NO;
 }
 
-let lastplayedID: string;
-async function handleNewMusic(videoElement: HTMLVideoElement) {
-  if (lastplayedID === videoElement.src) return;
-  lastplayedID = videoElement.src;
+let currentlyPlaying = {
+  SRCID: "",
+  watchID: "",
+  trackName: "",
+  artist: "",
+  isMusic: Decision.NO,
+};
 
-  const isSong = await determineIfSong();
-  if (!isSong) {
+async function handleNewMusic(videoElement: HTMLVideoElement) {
+  // if (currentlyPlaying.SRCID === videoElement.src) return;
+  // currentlyPlaying.SRCID = videoElement.src;
+
+  const isSong = await determineIfSongDOM();
+  //@ts-ignore
+  if (isSong === Decision.NO) {
     log("Not a song");
     return;
   }
@@ -79,9 +99,23 @@ async function handleNewMusic(videoElement: HTMLVideoElement) {
   Now playing: ${data.trackName} by ${data.artist}
   watchID: ${data.watchID}
   ---------`);
+  currentlyPlaying = {
+    SRCID: videoElement.src,
+    watchID: data.watchID,
+    trackName: data.trackName || "",
+    artist: data.artist || "",
+    isMusic: isSong,
+  };
+}
 
-  if (data.watchID === "Unknown") return;
-  forwardToWebsocket(data);
+async function handleEnded() {
+  if (currentlyPlaying.isMusic === Decision.NO) return;
+  if (currentlyPlaying.isMusic === Decision.MAYBE) {
+    currentlyPlaying.isMusic = await determineIfSongYTAPI();
+    if (currentlyPlaying.isMusic === Decision.NO) return;
+  }
+  log("music Sent to websocket");
+  forwardToWebsocket(currentlyPlaying);
 }
 
 function handleResume() {
@@ -105,10 +139,14 @@ function ensureSingleMounting(Element: Element) {
 function mount(videoElement: HTMLVideoElement) {
   // ensureSingleMounting(videoElement);
   if (!videoElement.paused) handleNewMusic(videoElement);
-  videoElement.addEventListener("play", () => handleNewMusic(videoElement));
   videoElement.addEventListener("play", handleResume);
   videoElement.addEventListener("pause", handlePause);
   videoElement.addEventListener("seeked", handleSeek);
+
+  videoElement.addEventListener("loadedmetadata", () =>
+    handleNewMusic(videoElement)
+  );
+  videoElement.addEventListener("ended", handleEnded);
   log("Succesfully mounted to video player");
 }
 

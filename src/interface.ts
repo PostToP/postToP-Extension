@@ -14,3 +14,9 @@ export interface IMusic {
   trackName: string;
   artist: string;
 }
+
+export enum Decision {
+  YES,
+  MAYBE,
+  NO,
+}
