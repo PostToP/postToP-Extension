@@ -20,3 +20,8 @@ export enum Decision {
   MAYBE,
   NO,
 }
+
+export enum MusicStatus {
+  PLAYING,
+  PAUSED,
+}
