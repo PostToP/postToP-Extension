@@ -1,10 +1,10 @@
 import { Decision, MusicStatus } from "../interface";
 import { log } from "./Logging";
-import { determineIfSongDOM, determineIfSongYTAPI, pullData } from "./Music";
+import { isSongAvailableOnYTAPI } from "./API";
+import { MusicService } from "./service/MusicService";
 import { forwardToWebsocket } from "./WebSocket";
 
 let currentlyPlaying = {
-  SRCID: "",
   watchID: "",
   trackName: "",
   artistID: "",
@@ -14,19 +14,18 @@ let currentlyPlaying = {
   isMusic: Decision.NO,
 };
 
-export async function handleLoadedMetadata(videoElement: HTMLVideoElement) {
-  const isSong = await determineIfSongDOM();
+export async function handleLoadedMetadata(strategy: typeof MusicService) {
+  const isSong = await strategy.determineIfSong();
   if (isSong === Decision.NO) return;
 
   log("New possible music detected");
-  let data = await pullData();
+  let data = await strategy.pullData();
 
   currentlyPlaying = {
-    SRCID: videoElement.src,
     watchID: data.watchID,
     trackName: data.trackName || "",
     artistName: data.artist || "",
-    artistID: "",
+    artistID: data.authorHandle || "",
     cover: data.cover || "",
     MusicStatus: MusicStatus.PLAYING,
     isMusic: isSong,
@@ -35,18 +34,19 @@ export async function handleLoadedMetadata(videoElement: HTMLVideoElement) {
   log(
     `---------\nCurrently Playing:${currentlyPlaying.trackName} by ${currentlyPlaying.artistName}\n---------`
   );
+  console.dir(currentlyPlaying);
 }
 
 export async function handleEnded() {
   const localCopy = { ...currentlyPlaying }; //slight chance that the video element changes before the websocket sends the data
+  if (localCopy.watchID === "Unknown") return;
   if (localCopy.isMusic === Decision.NO) return;
-  if (localCopy.isMusic === Decision.MAYBE) {
-    localCopy.isMusic = await determineIfSongYTAPI();
-    if (localCopy.isMusic === Decision.NO) return;
-  }
+  if (localCopy.isMusic === Decision.MAYBE)
+    if (!(await isSongAvailableOnYTAPI())) return;
+
   log("Music sent to websocket");
-  const { watchID, artistName: artist } = localCopy;
-  forwardToWebsocket({ watchID, artist });
+  const { watchID, artistID } = localCopy;
+  forwardToWebsocket({ watchID, artistID });
 }
 
 export function handleResume() {

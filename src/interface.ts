@@ -1,11 +1,11 @@
-export enum MessageType {
-  MUSIC = "MUSIC",
+export enum WSMessageType {
+  MUSIC_LISTENED = "MUSIC_LISTENED",
   PING = "PING",
   PONG = "PONG",
 }
 
 export interface IRequest {
-  type: MessageType;
+  type: WSMessageType;
   payload?: IMusic | object;
 }
 
@@ -16,12 +16,12 @@ export interface IMusic {
 }
 
 export enum Decision {
-  YES,
-  MAYBE,
   NO,
+  MAYBE,
+  YES,
 }
 
 export enum MusicStatus {
-  PLAYING,
   PAUSED,
+  PLAYING,
 }

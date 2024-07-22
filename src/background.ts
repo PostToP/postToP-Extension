@@ -2,7 +2,7 @@ import {
   changeWebsocketURL,
   sendMessageToWebSocket,
 } from "./background/WebSocket";
-import { MessageType } from "./interface";
+import { WSMessageType } from "./interface";
 import "./background/PopupEventListener";
 
 let listenOnYt = true;
@@ -22,8 +22,8 @@ function handleUpdated(tabId: any, changeInfo: any, tabInfo: any) {
 }
 
 chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === "MUSIC_STARTED")
-    sendMessageToWebSocket(MessageType.MUSIC, message.payload);
+  if (message.type === WSMessageType.MUSIC_LISTENED)
+    sendMessageToWebSocket(WSMessageType.MUSIC_LISTENED, message.payload);
 });
 
 chrome.storage.local.get(["settings"], function (result) {

@@ -1,4 +1,4 @@
-import { MessageType } from "../interface";
+import { WSMessageType } from "../interface";
 
 export let webSocket: WebSocket | null = null;
 export let webSocketURL: string = "ws://localhost:8080";
@@ -33,12 +33,12 @@ export function changeWebsocketURL(url: string) {
 
 function heartbeat() {
   const keepAliveIntervalId = setInterval(() => {
-    if (webSocket) sendMessageToWebSocket(MessageType.PING);
+    if (webSocket) sendMessageToWebSocket(WSMessageType.PING);
     else clearInterval(keepAliveIntervalId);
   }, 20 * 1000);
 }
 
-export function sendMessageToWebSocket(type: MessageType, payload?: object) {
+export function sendMessageToWebSocket(type: WSMessageType, payload?: object) {
   const data = {
     type,
     payload,
