@@ -2,25 +2,26 @@ import { Decision } from "../../interface";
 import { getMediaSessionInfo, waitforElement } from "../DOM";
 import { MusicService } from "./MusicService";
 
-export default class YoutubeMusic implements MusicService {
+export default class YoutubeMusic extends MusicService {
   public static async pullData() {
-    const authorHandle = await this.getAuthorHandle();
-    const watchID = await this.getWatchID();
+    const authorHandle = this.getAuthorHandle();
+    const watchID = this.getWatchID();
+    const length = this.getVideoLength();
     const mediaSession = await getMediaSessionInfo();
     const data = {
-      watchID,
+      watchID: await watchID,
       trackName: mediaSession.title,
       artist: mediaSession.artist,
       cover: mediaSession.cover,
-      authorHandle,
+      authorHandle: await authorHandle,
+      length: await length,
     };
     return data;
   }
 
   private static async getWatchID() {
-    const { href } = document.location;
     const watchID =
-      href.match(/v=([^&#]{5,})/)?.[1] ??
+      this.getWatchIDURL ??
       document
         .querySelector<HTMLAnchorElement>("a.ytp-title-link.yt-uix-sessionlink")
         ?.href.match(/v=([^&#]{5,})/)?.[1] ??

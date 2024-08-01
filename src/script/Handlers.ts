@@ -3,43 +3,34 @@ import { log } from "./Logging";
 import { isSongAvailableOnYTAPI } from "./API";
 import { MusicService } from "./service/MusicService";
 import { forwardToWebsocket } from "./WebSocket";
+import { CurrentlyPlaying } from "../CurrentlyPlaying";
 
-let currentlyPlaying = {
-  watchID: "",
-  trackName: "",
-  artistID: "",
-  artistName: "",
-  cover: "",
-  MusicStatus: MusicStatus.PAUSED,
-  isMusic: Decision.NO,
-};
-
-export async function handleLoadedMetadata(strategy: typeof MusicService) {
+export async function handleLoadedMetadata(
+  strategy: typeof MusicService,
+  currentlyPlaying: CurrentlyPlaying
+) {
   const isSong = await strategy.determineIfSong();
   if (isSong === Decision.NO) return;
 
   log("New possible music detected");
   let data = await strategy.pullData();
-
-  currentlyPlaying = {
+  currentlyPlaying.setValues({
     watchID: data.watchID,
-    trackName: data.trackName || "",
-    artistName: data.artist || "",
-    artistID: data.authorHandle || "",
-    cover: data.cover || "",
-    MusicStatus: MusicStatus.PLAYING,
+    trackName: data.trackName,
+    artistID: data.authorHandle,
+    artistName: data.artist,
+    cover: data.cover,
+    status: MusicStatus.PLAYING,
+    length: data.length,
     isMusic: isSong,
-  };
-
-  log(
-    `---------\nCurrently Playing:${currentlyPlaying.trackName} by ${currentlyPlaying.artistName}\n---------`
-  );
-  console.dir(currentlyPlaying);
+  });
+  currentlyPlaying.time = strategy.currentTime();
 }
 
-export async function handleEnded() {
+export async function handleEnded(currentlyPlaying: CurrentlyPlaying) {
+  currentlyPlaying.status = MusicStatus.ENDED;
   const localCopy = { ...currentlyPlaying }; //slight chance that the video element changes before the websocket sends the data
-  if (localCopy.watchID === "Unknown") return;
+  if (!localCopy.watchID) return;
   if (localCopy.isMusic === Decision.NO) return;
   if (localCopy.isMusic === Decision.MAYBE)
     if (!(await isSongAvailableOnYTAPI())) return;
@@ -49,16 +40,19 @@ export async function handleEnded() {
   forwardToWebsocket({ watchID, artistID });
 }
 
-export function handleResume() {
+export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
   log("Resume event detected");
-  currentlyPlaying.MusicStatus = MusicStatus.PLAYING;
+  currentlyPlaying.status = MusicStatus.PLAYING;
+  currentlyPlaying.time = MusicService.currentTime();
 }
 
-export function handlePause() {
+export async function handlePause(currentlyPlaying: CurrentlyPlaying) {
   log("Pause event detected");
-  currentlyPlaying.MusicStatus = MusicStatus.PAUSED;
+  currentlyPlaying.status = MusicStatus.PAUSED;
+  currentlyPlaying.time = MusicService.currentTime();
 }
 
-export function handleSeek() {
+export async function handleSeek(currentlyPlaying: CurrentlyPlaying) {
   log("Seek event detected");
+  currentlyPlaying.time = MusicService.currentTime();
 }

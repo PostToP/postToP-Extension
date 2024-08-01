@@ -2,26 +2,25 @@ import { getMediaSessionInfo, waitforElementToChange } from "../DOM";
 import { Decision } from "../../interface";
 import { MusicService } from "./MusicService";
 
-export default class Youtube implements MusicService {
+export default class Youtube extends MusicService {
   public static async pullData() {
     const authorHandle = this.getAuthorHandle();
     const watchID = this.getWatchID();
+    const length = this.getVideoLength();
     const mediaSession = await getMediaSessionInfo();
-
     const data = {
       watchID: await watchID,
       trackName: mediaSession.title,
       artist: mediaSession.artist,
       cover: mediaSession.cover,
       authorHandle: await authorHandle,
+      length: await length,
     };
     return data;
   }
 
   private static async getWatchID() {
-    const { href } = document.location;
-    const watchID = href.match(/v=([^&#]{5,})/)?.[1] ?? "Unknown";
-    return watchID;
+    return this.getWatchIDURL();
   }
 
   private static getAuthorHandle(): Promise<string> {

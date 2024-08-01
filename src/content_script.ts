@@ -11,6 +11,7 @@ import { log } from "./script/Logging";
 import YoutubeMusic from "./script/service/YoutubeMusic";
 import Youtube from "./script/service/Youtube";
 import { MusicService } from "./script/service/MusicService";
+import { CurrentlyPlaying } from "./CurrentlyPlaying";
 
 function mount(videoElement: HTMLVideoElement) {
   const { hostname } = document.location;
@@ -21,15 +22,31 @@ function mount(videoElement: HTMLVideoElement) {
     log("Not a supported website");
     return;
   }
-  videoElement.addEventListener("play", handleResume);
-  videoElement.addEventListener("pause", handlePause);
-  videoElement.addEventListener("seeked", handleSeek);
+
+  let currentlyPlaying = new CurrentlyPlaying();
+  videoElement.addEventListener("play", () => handleResume(currentlyPlaying));
+  videoElement.addEventListener("pause", () => handlePause(currentlyPlaying));
+  videoElement.addEventListener("seeked", () => handleSeek(currentlyPlaying));
 
   videoElement.addEventListener("loadedmetadata", () =>
-    handleLoadedMetadata(strategy)
+    handleLoadedMetadata(strategy, currentlyPlaying)
   );
-  videoElement.addEventListener("ended", handleEnded);
+  videoElement.addEventListener("ended", () => handleEnded(currentlyPlaying));
+
   log("Succesfully mounted to video player");
+
+  currentlyPlaying.onUpdate((currentlyPlaying) => {
+    chrome.runtime.sendMessage({ type: "updatePopup", data: currentlyPlaying });
+  });
+
+  chrome.runtime.onMessage.addListener(function (
+    request,
+    sender,
+    sendResponse
+  ) {
+    if (request.type === "getCurrentlyPlaying")
+      sendResponse({ data: currentlyPlaying });
+  });
 }
 
 function startMediaTracking() {

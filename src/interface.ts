@@ -22,6 +22,7 @@ export enum Decision {
 }
 
 export enum MusicStatus {
-  PAUSED,
-  PLAYING,
+  PAUSED = "PAUSED",
+  PLAYING = "PLAYING",
+  ENDED = "ENDED",
 }
