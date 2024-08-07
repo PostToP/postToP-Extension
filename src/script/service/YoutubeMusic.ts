@@ -4,24 +4,26 @@ import { MusicService } from "./MusicService";
 
 export default class YoutubeMusic extends MusicService {
   public static async pullData() {
-    const authorHandle = this.getAuthorHandle();
-    const watchID = this.getWatchID();
-    const length = this.getVideoLength();
-    const mediaSession = await getMediaSessionInfo();
+    const [authorHandle, watchID, length, mediaSession] = await Promise.all([
+      this.getAuthorHandle(),
+      this.getWatchID(),
+      this.getVideoLength(),
+      getMediaSessionInfo(),
+    ]);
     const data = {
-      watchID: await watchID,
+      watchID: watchID,
       trackName: mediaSession.title,
       artist: mediaSession.artist,
       cover: mediaSession.cover,
-      authorHandle: await authorHandle,
-      length: await length,
+      authorHandle: authorHandle,
+      length: length,
     };
     return data;
   }
 
   private static async getWatchID() {
     const watchID =
-      this.getWatchIDURL ??
+      this.getWatchIDURL() ??
       document
         .querySelector<HTMLAnchorElement>("a.ytp-title-link.yt-uix-sessionlink")
         ?.href.match(/v=([^&#]{5,})/)?.[1] ??

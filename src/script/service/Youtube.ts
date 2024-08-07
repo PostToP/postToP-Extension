@@ -4,17 +4,19 @@ import { MusicService } from "./MusicService";
 
 export default class Youtube extends MusicService {
   public static async pullData() {
-    const authorHandle = this.getAuthorHandle();
-    const watchID = this.getWatchID();
-    const length = this.getVideoLength();
-    const mediaSession = await getMediaSessionInfo();
+    const [authorHandle, watchID, length, mediaSession] = await Promise.all([
+      this.getAuthorHandle(),
+      this.getWatchID(),
+      this.getVideoLength(),
+      getMediaSessionInfo(),
+    ]);
     const data = {
-      watchID: await watchID,
+      watchID: watchID,
       trackName: mediaSession.title,
       artist: mediaSession.artist,
       cover: mediaSession.cover,
-      authorHandle: await authorHandle,
-      length: await length,
+      authorHandle: authorHandle,
+      length: length,
     };
     return data;
   }
