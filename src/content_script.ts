@@ -31,6 +31,10 @@ function mount(videoElement: HTMLVideoElement) {
   videoElement.addEventListener("loadedmetadata", () =>
     handleLoadedMetadata(strategy, currentlyPlaying)
   );
+
+  if (videoElement.readyState >= 1)
+    handleLoadedMetadata(strategy, currentlyPlaying);
+
   videoElement.addEventListener("ended", () => handleEnded(currentlyPlaying));
 
   log("Succesfully mounted to video player");
