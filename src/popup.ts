@@ -1,6 +1,8 @@
 import { CurrentlyPlaying } from "./CurrentlyPlaying";
 import "./popup/Serialization";
 
+let currentlyPlaying: CurrentlyPlaying;
+
 // Popup to background
 document.addEventListener("DOMContentLoaded", function () {
   chrome.runtime.sendMessage(
@@ -37,6 +39,25 @@ function handleYTMusicClick() {
   chrome.runtime.sendMessage({ type: "ytmusic", set });
 }
 
+document
+  .getElementById("filterButton")
+  ?.addEventListener("click", handleFilter);
+
+function handleFilter() {
+  let server = (document.getElementById("webSocketURL") as HTMLInputElement)!
+    .value;
+  server = server.replace("ws://", "").replace(":8080", ":8000/filter"); // jank but idc
+  fetch(server, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      watchID: currentlyPlaying.watchID,
+    }),
+  });
+}
+
 // Popup to content script
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.tabs.sendMessage(
@@ -62,7 +83,7 @@ function secondsToHms(d: number) {
 
 let jank: NodeJS.Timer;
 function setCurrentlyPlaying(asd: CurrentlyPlaying) {
-  const currentlyPlaying = CurrentlyPlaying.copy(asd);
+  currentlyPlaying = CurrentlyPlaying.copy(asd);
   document
     .getElementById("currentlyPlayingImg")!
     .setAttribute("src", currentlyPlaying.cover!);
