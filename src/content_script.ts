@@ -1,6 +1,7 @@
 import "./script/SingleMount";
 import { waitforElement } from "./script/DOM";
 import {
+  handleAbort,
   handleEnded,
   handleLoadedMetadata,
   handlePause,
@@ -36,6 +37,7 @@ function mount(videoElement: HTMLVideoElement) {
     handleLoadedMetadata(strategy, currentlyPlaying);
 
   videoElement.addEventListener("ended", () => handleEnded(currentlyPlaying));
+  videoElement.addEventListener("abort", () => handleAbort(currentlyPlaying));
 
   log("Succesfully mounted to video player");
 

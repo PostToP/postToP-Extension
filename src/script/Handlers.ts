@@ -55,3 +55,8 @@ export async function handleSeek(currentlyPlaying: CurrentlyPlaying) {
   log("Seek event detected");
   currentlyPlaying.time = MusicService.currentTime();
 }
+
+export async function handleAbort(currentlyPlaying: CurrentlyPlaying) {
+  log("Abort event detected");
+  currentlyPlaying.clear();
+}

@@ -64,4 +64,18 @@ export class CurrentlyPlaying {
   private update() {
     this.eventListeners.forEach((cb) => cb(this));
   }
+
+  public clear() {
+    this.watchID = undefined;
+    this.trackName = undefined;
+    this.artistID = undefined;
+    this.artistName = undefined;
+    this.cover = undefined;
+    this.status = undefined;
+    this.isMusic = undefined;
+    this.length = undefined;
+    this.currentTime = undefined;
+    this.updatedAt = undefined;
+    this.update();
+  }
 }
