@@ -1,4 +1,5 @@
 import {
+  changeToken,
   changeWebsocketURL,
   sendMessageToWebSocket,
 } from "./background/WebSocket";
@@ -30,6 +31,7 @@ chrome.storage.local.get(["settings"], function (result) {
   listenOnYt = result.settings.yt;
   listenOnYtMusic = result.settings.ytmusic;
   changeWebsocketURL(result.settings.webSocketURL);
+  changeToken(result.settings.token);
 });
 
 chrome.storage.onChanged.addListener((changes, namespace) => {

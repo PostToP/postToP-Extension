@@ -46,7 +46,7 @@ document
 function handleFilter() {
   let server = (document.getElementById("webSocketURL") as HTMLInputElement)!
     .value;
-  server = server.replace("ws://", "").replace(":8080", ":8000/filter"); // jank but idc
+  server = server.replace("ws://", "http://") + "/filter";
   fetch(server, {
     method: "POST",
     headers: {
