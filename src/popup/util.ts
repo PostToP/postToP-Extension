@@ -9,3 +9,7 @@ export function secondsToHms(d: number) {
 
   return `${hoursDisplay}:${minutesDisplay}:${secondsDisplay}`;
 }
+
+export async function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

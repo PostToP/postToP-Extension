@@ -1,6 +1,7 @@
 import { currentlyPlaying } from ".";
 import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
 import { secondsToHms } from "./util";
+import { getWebsocketStatus } from "./Websocket";
 
 export const $ = (selector: string) => document.querySelector(selector);
 export const $$ = (selector: string) => document.querySelectorAll(selector);
@@ -12,7 +13,6 @@ export const ytCheckboxElement = $id("yt") as HTMLInputElement;
 export const ytmusicCheckboxElement = $id("ytmusic") as HTMLInputElement;
 export const webSocketURLElement = $id("webSocketURL") as HTMLInputElement;
 export const tokenElement = $id("token") as HTMLInputElement;
-
 
 let currentlyPlayingSecondsInterval: NodeJS.Timer;
 export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
@@ -30,4 +30,18 @@ export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
   }, 1000);
 
   $id("currentlyPlayingMaxTime")!.innerText = secondsToHms(cp.length!);
+}
+
+export async function updateWebsocketStatus() {
+  const status = await getWebsocketStatus();
+  const contentElement = document.getElementById(
+    "websocketStatus"
+  ) as HTMLElement;
+  contentElement.innerText = status == 1 ? "Connected" : "Disconnected";
+  if (status == 1)
+    document
+      .getElementById("connectedSettingsForm")
+      ?.classList.remove("hidden");
+  else
+    document.getElementById("connectedSettingsForm")?.classList.add("hidden");
 }

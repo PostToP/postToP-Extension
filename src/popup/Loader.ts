@@ -1,24 +1,10 @@
 import { setCurrentlyPlaying } from ".";
+import { settingsForm, updateWebsocketStatus } from "./DOM";
+import { wait } from "./util";
 
-document.addEventListener("DOMContentLoaded", function () {
-  chrome.runtime.sendMessage(
-    { message: "websocketStatus" },
-    function (response) {
-      const contentElement = document.getElementById(
-        "websocketStatus"
-      ) as HTMLElement;
-      contentElement.innerText =
-        response.data == 1 ? "Connected" : "Disconnected";
-      if (response.data == 1)
-        document
-          .getElementById("connectedSettingsForm")
-          ?.classList.remove("hidden");
-      else
-        document
-          .getElementById("connectedSettingsForm")
-          ?.classList.add("hidden");
-    }
-  );
+document.addEventListener("DOMContentLoaded", updateWebsocketStatus);
+settingsForm.addEventListener("change", () => {
+  wait(1000).then(updateWebsocketStatus);
 });
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
