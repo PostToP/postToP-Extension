@@ -1,9 +1,16 @@
+import { WSMessageType } from "../../common/interface";
 import {
   changeWebsocketURL,
+  sendMessageToWebSocket,
   webSocket,
   webSocketToken,
   webSocketURL,
 } from "./WebSocket";
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === WSMessageType.MUSIC_LISTENED)
+    sendMessageToWebSocket(WSMessageType.MUSIC_LISTENED, message.payload);
+});
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.message === "websocketStatus")

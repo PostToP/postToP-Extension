@@ -1,4 +1,4 @@
-import { Decision } from "../../interface";
+import { Decision } from "../../common/interface";
 import { getMediaSessionInfo, waitforElement } from "../DOM";
 import { MusicService } from "./MusicService";
 

@@ -1,8 +1,8 @@
-import { Decision, MusicStatus } from "../interface";
+import { Decision, MusicStatus } from "../common/interface";
 import { log } from "./Logging";
 import { MusicService } from "./service/MusicService";
 import { forwardToWebsocket } from "./WebSocket";
-import { CurrentlyPlaying } from "../CurrentlyPlaying";
+import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
 
 export async function handleLoadedMetadata(
   strategy: typeof MusicService,
@@ -28,12 +28,6 @@ export async function handleLoadedMetadata(
 
 export async function handleEnded(currentlyPlaying: CurrentlyPlaying) {
   currentlyPlaying.status = MusicStatus.ENDED;
-  // const localCopy = { ...currentlyPlaying }; //slight chance that the video element changes before the websocket sends the data
-  // if (!localCopy.watchID) return;
-  // if (localCopy.isMusic === Decision.NO) return;
-  // if (localCopy.isMusic === Decision.MAYBE)
-  //   if (!(await isSongAvailableOnYTAPI())) return;
-
   log("Music sent to websocket");
   const { watchID, artistID } = currentlyPlaying;
   forwardToWebsocket({ watchID, artistID });

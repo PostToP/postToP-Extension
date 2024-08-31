@@ -1,4 +1,4 @@
-import { Decision } from "../../interface";
+import { Decision } from "../../common/interface";
 
 export class MusicService {
   public static async pullData(): Promise<any> {

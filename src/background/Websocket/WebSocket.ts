@@ -1,8 +1,9 @@
-import { WSMessageType } from "../interface";
+import { WSMessageType } from "../../common/interface";
 
 export let webSocket: WebSocket | null = null;
-export let webSocketURL: string = "ws://localhost:8080";
+export let webSocketURL: string = "ws://localhost:8000";
 export let webSocketToken: string = "";
+
 export function connect() {
   webSocket = new WebSocket(webSocketURL + "?token=" + webSocketToken);
 

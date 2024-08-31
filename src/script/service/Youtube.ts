@@ -1,5 +1,5 @@
 import { getMediaSessionInfo, waitforElementToChange } from "../DOM";
-import { Decision } from "../../interface";
+import { Decision } from "../../common/interface";
 import { MusicService } from "./MusicService";
 
 export default class Youtube extends MusicService {

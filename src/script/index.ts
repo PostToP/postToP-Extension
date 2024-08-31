@@ -1,5 +1,5 @@
-import "./script/SingleMount";
-import { waitforElement } from "./script/DOM";
+import "./SingleMount";
+import { waitforElement } from "./DOM";
 import {
   handleAbort,
   handleEnded,
@@ -7,12 +7,12 @@ import {
   handlePause,
   handleResume,
   handleSeek,
-} from "./script/Handlers";
-import { log } from "./script/Logging";
-import YoutubeMusic from "./script/service/YoutubeMusic";
-import Youtube from "./script/service/Youtube";
-import { MusicService } from "./script/service/MusicService";
-import { CurrentlyPlaying } from "./CurrentlyPlaying";
+} from "./Handlers";
+import { log } from "./Logging";
+import YoutubeMusic from "./service/YoutubeMusic";
+import Youtube from "./service/Youtube";
+import { MusicService } from "./service/MusicService";
+import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
 
 function mount(videoElement: HTMLVideoElement) {
   const { hostname } = document.location;

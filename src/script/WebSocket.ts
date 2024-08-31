@@ -1,4 +1,4 @@
-import { WSMessageType } from "../interface";
+import { WSMessageType } from "../common/interface";
 
 export function forwardToWebsocket(message: object) {
   chrome.runtime.sendMessage({

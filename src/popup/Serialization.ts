@@ -1,13 +1,11 @@
-const settingsForm = document.getElementById("settingsForm") as HTMLFormElement;
-const logLevelElement = document.getElementById("log") as HTMLSelectElement;
-const ytCheckboxElement = document.getElementById("yt") as HTMLInputElement;
-const ytmusicCheckboxElement = document.getElementById(
-  "ytmusic"
-) as HTMLInputElement;
-const webSocketURLElement = document.getElementById(
-  "webSocketURL"
-) as HTMLInputElement;
-const tokenElement = document.getElementById("token") as HTMLInputElement;
+import {
+  logLevelElement,
+  settingsForm,
+  tokenElement,
+  webSocketURLElement,
+  ytCheckboxElement,
+  ytmusicCheckboxElement,
+} from "./DOM";
 
 function handleSave() {
   let settings = {
@@ -26,10 +24,11 @@ function handleLoad() {
     logLevelElement.value = logLevel ?? "Info";
     ytCheckboxElement.checked = yt ?? false;
     ytmusicCheckboxElement.checked = ytmusic ?? false;
-    webSocketURLElement.value = webSocketURL ?? "ws://localhost:8080";
+    webSocketURLElement.value = webSocketURL ?? "ws://localhost:8000";
     tokenElement.value = token ?? "";
   });
 }
 
 document.addEventListener("DOMContentLoaded", handleLoad);
+settingsForm.addEventListener("submit", (e) => e.preventDefault());
 settingsForm.addEventListener("change", handleSave);
