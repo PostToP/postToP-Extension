@@ -19,8 +19,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace !== "local") return;
-  if (changes["settings"].newValue["webSocketURL"] !== webSocketURL)
+  let restart = false;
+  if (changes["settings"].newValue["webSocketURL"] !== webSocketURL) {
     changeWebsocketURL(changes["settings"].newValue["webSocketURL"]);
-  if (changes["settings"].newValue["token"] !== webSocketToken)
+    restart = true;
+  }
+  if (changes["settings"].newValue["token"] !== webSocketToken) {
     changeWebsocketURL(changes["settings"].newValue["token"]);
+    restart = true;
+  }
+  if (restart) {
+    restartWebsocket();
+  }
 });

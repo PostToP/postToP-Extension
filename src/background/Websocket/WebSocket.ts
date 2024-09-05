@@ -28,14 +28,15 @@ function disconnectWebsocket() {
 }
 
 export function changeWebsocketURL(url: string) {
-  disconnectWebsocket();
   webSocketURL = url;
-  connect();
 }
 
 export function changeToken(newToken: string) {
-  disconnectWebsocket();
   webSocketToken = newToken;
+}
+
+export function restartWebsocket() {
+  disconnectWebsocket();
   connect();
 }
 
