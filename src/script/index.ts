@@ -13,6 +13,7 @@ import YoutubeMusic from "./service/YoutubeMusic";
 import Youtube from "./service/Youtube";
 import { MusicService } from "./service/MusicService";
 import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
+import { chromeReceiveMessage, chromeSendMessage } from "../common/Chrome";
 
 function mount(videoElement: HTMLVideoElement) {
   const { hostname } = document.location;
@@ -42,17 +43,18 @@ function mount(videoElement: HTMLVideoElement) {
   log("Succesfully mounted to video player");
 
   currentlyPlaying.onUpdate((currentlyPlaying) => {
-    chrome.runtime.sendMessage({ type: "updatePopup", data: currentlyPlaying });
+    chromeSendMessage({
+      type: "ACTION",
+      key: "currentlyPlayingChanged",
+      value: currentlyPlaying.safe(),
+    });
   });
 
-  chrome.runtime.onMessage.addListener(function (
-    request,
-    sender,
-    sendResponse
-  ) {
-    if (request.type === "getCurrentlyPlaying")
-      sendResponse({ data: currentlyPlaying });
-  });
+  chromeReceiveMessage(
+    { type: "GET", key: "currentlyPlaying" },
+    undefined,
+    () => ({ value: currentlyPlaying.safe() })
+  );
 }
 
 function startMediaTracking() {

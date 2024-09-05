@@ -26,3 +26,13 @@ export enum MusicStatus {
   PLAYING = "PLAYING",
   ENDED = "ENDED",
 }
+
+export interface IChromeMessage<T = any> {
+  type: "GET" | "SET" | "ACTION";
+  key: string;
+  value?: T;
+}
+
+export interface IChromeResponse<T = any> {
+  value: T;
+}

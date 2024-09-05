@@ -33,7 +33,7 @@ export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
 }
 
 export async function updateWebsocketStatus() {
-  const status = await getWebsocketStatus();
+  const { value: status } = await getWebsocketStatus();
   const contentElement = document.getElementById(
     "websocketStatus"
   ) as HTMLElement;

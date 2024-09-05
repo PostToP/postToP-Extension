@@ -1,21 +1,25 @@
+import { chromeReceiveMessage } from "../../common/Chrome";
 import { WSMessageType } from "../../common/interface";
 import {
   changeWebsocketURL,
+  restartWebsocket,
   sendMessageToWebSocket,
   webSocket,
   webSocketToken,
   webSocketURL,
 } from "./WebSocket";
 
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === WSMessageType.MUSIC_LISTENED)
-    sendMessageToWebSocket(WSMessageType.MUSIC_LISTENED, message.payload);
+chromeReceiveMessage({ type: "ACTION", key: "MusicListened" }, (data) => {
+  sendMessageToWebSocket(WSMessageType.MUSIC_LISTENED, data.value);
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.message === "websocketStatus")
-    sendResponse({ data: webSocket?.readyState });
-});
+chromeReceiveMessage(
+  { type: "GET", key: "websocketStatus" },
+  undefined,
+  () => ({
+    value: webSocket?.readyState,
+  })
+);
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace !== "local") return;

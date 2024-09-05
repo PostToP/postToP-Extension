@@ -1,8 +1,9 @@
-import { WSMessageType } from "../common/interface";
+import { chromeSendMessage } from "../common/Chrome";
 
 export function forwardToWebsocket(message: object) {
-  chrome.runtime.sendMessage({
-    type: WSMessageType.MUSIC_LISTENED,
-    payload: message,
+  chromeSendMessage({
+    type: "ACTION",
+    key: "MusicListened",
+    value: message,
   });
 }

@@ -2,18 +2,7 @@ import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
 import { setCurrentlyPlayingDOM, $id } from "./DOM";
 import "./Serialization";
 import "./Loader";
-
-$id("yt")?.addEventListener("click", handleYTClick);
-function handleYTClick() {
-  const set = ($id("yt") as HTMLInputElement).checked;
-  chrome.runtime.sendMessage({ type: "yt", set });
-}
-
-$id("ytmusic")?.addEventListener("click", handleYTMusicClick);
-function handleYTMusicClick() {
-  const set = ($id("ytmusic") as HTMLInputElement).checked;
-  chrome.runtime.sendMessage({ type: "ytmusic", set });
-}
+import { chromeReceiveMessage } from "../common/Chrome";
 
 $id("filterButton")?.addEventListener("click", handleFilter);
 
@@ -38,8 +27,9 @@ export function setCurrentlyPlaying(cp: CurrentlyPlaying) {
 }
 
 // script to popup
-chrome.runtime.onMessage.addListener(function (request) {
-  if (request.type === "updatePopup") {
-    setCurrentlyPlaying(request.data);
+chromeReceiveMessage(
+  { type: "ACTION", key: "currentlyPlayingChanged" },
+  (data) => {
+    setCurrentlyPlaying(data.value);
   }
-});
+);

@@ -56,13 +56,26 @@ export class CurrentlyPlaying {
       : this.currentTime;
   }
 
-  private eventListeners: Function[] = [];
+  private updateEventListeners: Function[] = [];
   public onUpdate(callback: (currentlyPlaying: CurrentlyPlaying) => void) {
-    this.eventListeners.push(callback);
+    this.updateEventListeners.push(callback);
+  }
+  private update() {
+    this.updateEventListeners.forEach((cb) => cb(this));
   }
 
-  private update() {
-    this.eventListeners.forEach((cb) => cb(this));
+  private endEventListeners: Function[] = [];
+  public onEnd(callback: (currentlyPlaying: CurrentlyPlaying) => void) {
+    this.endEventListeners.push(callback);
+  }
+  private end() {
+    this.endEventListeners.forEach((cb) => cb(this));
+  }
+
+  public endSong() {
+    this.status = MusicStatus.ENDED;
+    this.update();
+    this.end();
   }
 
   public clear() {
@@ -77,5 +90,20 @@ export class CurrentlyPlaying {
     this.currentTime = undefined;
     this.updatedAt = undefined;
     this.update();
+  }
+
+  public safe() {
+    return {
+      watchID: this.watchID,
+      trackName: this.trackName,
+      artistID: this.artistID,
+      artistName: this.artistName,
+      cover: this.cover,
+      status: this.status,
+      isMusic: this.isMusic,
+      length: this.length,
+      currentTime: this.currentTime,
+      updatedAt: this.updatedAt,
+    };
   }
 }
