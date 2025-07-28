@@ -14,7 +14,7 @@ export const ytmusicCheckboxElement = $id("ytmusic") as HTMLInputElement;
 export const webSocketURLElement = $id("webSocketURL") as HTMLInputElement;
 export const tokenElement = $id("token") as HTMLInputElement;
 
-let currentlyPlayingSecondsInterval: NodeJS.Timer;
+let currentlyPlayingSecondsInterval: NodeJS.Timeout;
 export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
   $id("currentlyPlayingImg")!.setAttribute("src", cp.cover!);
   $id("currentlyPlayingTitle")!.innerText = cp.trackName!;
