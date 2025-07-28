@@ -13,12 +13,26 @@ export function connect() {
 
   webSocket.onmessage = (event) => {
     console.log(`websocket received message: ${event.data}`);
+    const data = JSON.parse(event.data);
+    handleAuthEvent(data);
   };
 
   webSocket.onclose = (event) => {
     console.log("websocket connection closed");
     webSocket = null;
   };
+}
+
+async function handleAuthEvent(data: any) {
+  if (data.op === 0) {
+    const token = await chrome.storage.local.get(["authToken"]);
+    webSocket?.send(JSON.stringify({
+      op: 1,
+      d: {
+        token: token.authToken || "",
+      },
+    }));
+  }
 }
 
 function disconnectWebsocket() {
