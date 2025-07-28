@@ -12,7 +12,6 @@ export const logLevelElement = $id("log") as HTMLSelectElement;
 export const ytCheckboxElement = $id("yt") as HTMLInputElement;
 export const ytmusicCheckboxElement = $id("ytmusic") as HTMLInputElement;
 export const webSocketURLElement = $id("webSocketURL") as HTMLInputElement;
-export const tokenElement = $id("token") as HTMLInputElement;
 
 let currentlyPlayingSecondsInterval: NodeJS.Timeout;
 export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {

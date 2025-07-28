@@ -2,10 +2,9 @@ import { WSMessageType } from "../../common/interface";
 
 export let webSocket: WebSocket | null = null;
 export let webSocketURL: string = "ws://localhost:8000";
-export let webSocketToken: string = "";
 
 export function connect() {
-  webSocket = new WebSocket(webSocketURL + "?token=" + webSocketToken);
+  webSocket = new WebSocket(webSocketURL);
 
   webSocket.onopen = (event) => {
     console.log("websocket open");
@@ -29,10 +28,6 @@ function disconnectWebsocket() {
 
 export function changeWebsocketURL(url: string) {
   webSocketURL = url;
-}
-
-export function changeToken(newToken: string) {
-  webSocketToken = newToken;
 }
 
 export function restartWebsocket() {

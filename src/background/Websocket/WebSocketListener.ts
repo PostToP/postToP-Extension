@@ -5,7 +5,6 @@ import {
   restartWebsocket,
   sendMessageToWebSocket,
   webSocket,
-  webSocketToken,
   webSocketURL,
 } from "./WebSocket";
 
@@ -28,10 +27,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     changeWebsocketURL(changes["settings"].newValue["webSocketURL"]);
     restart = true;
   }
-  if (changes["settings"].newValue["token"] !== webSocketToken) {
-    changeWebsocketURL(changes["settings"].newValue["token"]);
-    restart = true;
-  }
+
   if (restart) {
     restartWebsocket();
   }
