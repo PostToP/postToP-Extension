@@ -1,5 +1,7 @@
+import { RequestOperationType } from "./websocket";
+
 export enum WSMessageType {
-  MUSIC_LISTENED = "MUSIC_LISTENED",
+  MUSIC_LISTENED = RequestOperationType.MUSIC_ENDED,
   PING = "PING",
   PONG = "PONG",
 }

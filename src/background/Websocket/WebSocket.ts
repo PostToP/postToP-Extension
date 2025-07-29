@@ -1,4 +1,5 @@
 import { WSMessageType } from "../../common/interface";
+import { RequestOperationType, ResponseOperationType } from "../../common/websocket";
 
 export let webSocket: WebSocket | null = null;
 export let webSocketURL: string = "ws://localhost:8000";
@@ -8,7 +9,7 @@ export function connect() {
 
   webSocket.onopen = (event) => {
     console.log("websocket open");
-    heartbeat();
+    // heartbeat();
   };
 
   webSocket.onmessage = (event) => {
@@ -24,10 +25,10 @@ export function connect() {
 }
 
 async function handleAuthEvent(data: any) {
-  if (data.op === 0) {
+  if (data.op === ResponseOperationType.DECLARE_INTENT) {
     const token = await chrome.storage.local.get(["authToken"]);
     webSocket?.send(JSON.stringify({
-      op: 1,
+      op: RequestOperationType.AUTH,
       d: {
         token: token.authToken || "",
       },
@@ -58,8 +59,8 @@ function heartbeat() {
 
 export function sendMessageToWebSocket(type: WSMessageType, payload?: object) {
   const data = {
-    type,
-    payload,
+    op: type,
+    d: payload || {},
   };
   if (!webSocket || webSocket.readyState !== WebSocket.OPEN) {
     console.log("WebSocket not open");
