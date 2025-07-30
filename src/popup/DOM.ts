@@ -21,11 +21,11 @@ export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
   $id("currentlyPlayingArtist")!.innerText = cp.artistName!;
   $id("currentlyPlayingArtistID")!.innerText = cp.artistID!;
   $id("currentlyPlayingStatus")!.innerText = cp.status!.toString();
-  $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.time);
+  $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.currentTime || 0);
 
   clearInterval(currentlyPlayingSecondsInterval);
   currentlyPlayingSecondsInterval = setInterval(() => {
-    $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.time);
+    $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.currentTime || 0);
   }, 1000);
 
   $id("currentlyPlayingMaxTime")!.innerText = secondsToHms(cp.length!);

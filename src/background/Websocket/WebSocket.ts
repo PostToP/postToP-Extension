@@ -1,7 +1,10 @@
-import { RequestOperationType, ResponseOperationType } from "../../common/websocket";
+import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
+import { VideoStatus } from "../../common/interface";
+import { RequestOperationType, ResponseOperationType, VideoResponseData } from "../../common/websocket";
 
 export let webSocket: WebSocket | null = null;
 export let webSocketURL: string = "ws://localhost:8000";
+export let currentlyListening = new CurrentlyPlaying();
 
 export function connect() {
   webSocket = new WebSocket(webSocketURL);
@@ -15,6 +18,7 @@ export function connect() {
     console.log(`websocket received message: ${event.data}`);
     const data = JSON.parse(event.data);
     handleAuthEvent(data);
+    handleMusicQueryResponse(data);
   };
 
   webSocket.onclose = (event) => {
@@ -33,6 +37,20 @@ async function handleAuthEvent(data: any) {
       },
     }));
   }
+}
+
+async function handleMusicQueryResponse(data: any) {
+  if (data.op !== ResponseOperationType.MUSIC_STARTED) return;
+  let video = data.d.video as VideoResponseData;
+  currentlyListening.setValues({
+    watchID: video.watchID,
+    cover: video.coverImage,
+    status: VideoStatus.PLAYING,
+    length: video.duration,
+    trackName: video.title,
+    artistID: video.artist.handle,
+    artistName: video.artist.name,
+  });
 }
 
 function disconnectWebsocket() {

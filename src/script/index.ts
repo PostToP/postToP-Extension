@@ -13,7 +13,8 @@ import YoutubeMusic from "./service/YoutubeMusic";
 import Youtube from "./service/Youtube";
 import { MusicService } from "./service/MusicService";
 import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
-import { chromeReceiveMessage, chromeSendMessage } from "../common/Chrome";
+import { chromeSendMessage } from "../common/Chrome";
+import { forwardToWebsocket } from "./WebSocket";
 
 function mount(videoElement: HTMLVideoElement) {
   const { hostname } = document.location;
@@ -48,13 +49,13 @@ function mount(videoElement: HTMLVideoElement) {
       key: "currentlyPlayingChanged",
       value: currentlyPlaying.safe(),
     });
+    forwardToWebsocket(
+      {
+        watchID: currentlyPlaying.watchID,
+        currentTime: currentlyPlaying.currentTime,
+        status: currentlyPlaying.status
+      });
   });
-
-  chromeReceiveMessage(
-    { type: "GET", key: "currentlyPlaying" },
-    undefined,
-    () => ({ value: currentlyPlaying.safe() })
-  );
 }
 
 function startMediaTracking() {
