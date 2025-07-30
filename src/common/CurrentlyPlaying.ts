@@ -43,7 +43,7 @@ export class CurrentlyPlaying {
     this.isMusic = args.isMusic ?? this.isMusic;
     this.length = args.length ?? this.length;
     this.currentTime = args.currentTime ?? this.currentTime;
-    this.time = args.time ?? this.time;
+    this.time = args.time ?? this.currentTime;
     this.updatedAt = args.updatedAt ?? this.updatedAt;
     this.update();
   }

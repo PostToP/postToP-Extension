@@ -1,5 +1,5 @@
 import { setCurrentlyPlaying } from ".";
-import { chromeSendMessage } from "../common/Chrome";
+import { chromeReceiveMessage, chromeSendMessage } from "../common/Chrome";
 import { settingsForm, updateWebsocketStatus } from "./DOM";
 import { wait } from "./util";
 
@@ -11,5 +11,11 @@ settingsForm.addEventListener("change", () => {
 chromeSendMessage("GET_CURRENTLY_PLAYING").then((response) => {
   if (response) {
     setCurrentlyPlaying(response.value);
+  }
+});
+
+chromeReceiveMessage("VIDEO_UPDATE", (request) => {
+  if (request.value) {
+    setCurrentlyPlaying(request.value);
   }
 });

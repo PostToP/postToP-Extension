@@ -21,9 +21,9 @@ function handleFilter() {
   });
 }
 
-export let currentlyPlaying: CurrentlyPlaying;
+export let currentlyPlaying = new CurrentlyPlaying()
 export function setCurrentlyPlaying(cp: CurrentlyPlaying) {
-  currentlyPlaying = CurrentlyPlaying.copy(cp);
+  currentlyPlaying.setValues(cp);
   setCurrentlyPlayingDOM(currentlyPlaying);
 }
 
