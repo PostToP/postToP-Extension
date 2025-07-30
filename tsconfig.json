@@ -6,10 +6,22 @@
     "module": "ES2022",
     "esModuleInterop": true,
     "sourceMap": false,
-    "rootDir": "src",
-    "outDir": "dist/js",
     "noEmitOnError": true,
     "jsx": "react",
-    "typeRoots": ["node_modules/@types"]
-  }
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "references": [
+    {
+      "path": "./src/background"
+    },
+    {
+      "path": "./src/popup"
+    },
+    {
+      "path": "./src/script"
+    }
+  ],
+  "files": []
 }

@@ -26,6 +26,37 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
+        include: path.resolve(__dirname, '../src/background'),
+        use: {
+          loader: "ts-loader",
+          options: {
+            configFile: path.resolve(__dirname, '../src/background/tsconfig.json')
+          }
+        }
+      },
+      {
+        test: /\.tsx?$/,
+        include: path.resolve(__dirname, '../src/popup'),
+        use: {
+          loader: "ts-loader",
+          options: {
+            configFile: path.resolve(__dirname, '../src/popup/tsconfig.json')
+          }
+        }
+      },
+      {
+        test: /\.tsx?$/,
+        include: path.resolve(__dirname, '../src/script'),
+        use: {
+          loader: "ts-loader",
+          options: {
+            configFile: path.resolve(__dirname, '../src/script/tsconfig.json')
+          }
+        }
+      },
+      {
+        test: /\.tsx?$/,
+        include: path.resolve(__dirname, '../src/common'),
         use: "ts-loader",
         exclude: /node_modules/,
       },
