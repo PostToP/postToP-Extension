@@ -20,12 +20,17 @@ export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
   $id("currentlyPlayingID")!.innerText = cp.watchID!;
   $id("currentlyPlayingArtist")!.innerText = cp.artistName!;
   $id("currentlyPlayingArtistID")!.innerText = cp.artistID!;
-  $id("currentlyPlayingStatus")!.innerText = cp.status!.toString();
-  $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.currentTime || 0);
+  let statusText = "Unknown";
+  if (cp.status === undefined) statusText = "Unknown";
+  else if (cp.status === 0) statusText = "Playing";
+  else if (cp.status === 1) statusText = "Paused";
+  else if (cp.status === 2) statusText = "Ended";
+  $id("currentlyPlayingStatus")!.innerText = statusText;
+  $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.time || 0);
 
   clearInterval(currentlyPlayingSecondsInterval);
   currentlyPlayingSecondsInterval = setInterval(() => {
-    $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.currentTime || 0);
+    $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.time || 0);
   }, 1000);
 
   $id("currentlyPlayingMaxTime")!.innerText = secondsToHms(cp.length!);

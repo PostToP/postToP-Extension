@@ -13,7 +13,7 @@ chromeReceiveMessage("VIDEO_UPDATE", (data) => {
   sendMessageToWebSocket(RequestOperationType.MUSIC_STARTED, data.value);
   currentlyListening.setValues({
     watchID: data.value.watchID,
-    currentTime: data.value.currentTime,
+    time: data.value.currentTime,
     status: data.value.status,
   });
 });

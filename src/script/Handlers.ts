@@ -11,7 +11,7 @@ export async function handleLoadedMetadata(
   currentlyPlaying.setValues({
     watchID: data.watchID,
     status: VideoStatus.PLAYING,
-    currentTime: strategy.currentTime(),
+    time: strategy.currentTime(),
   });
 }
 
@@ -26,7 +26,7 @@ export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
   log("Resume event detected");
   currentlyPlaying.setValues({
     status: VideoStatus.PLAYING,
-    currentTime: MusicService.currentTime(),
+    time: MusicService.currentTime(),
   });
 }
 
@@ -34,14 +34,14 @@ export async function handlePause(currentlyPlaying: CurrentlyPlaying) {
   log("Pause event detected");
   currentlyPlaying.setValues({
     status: VideoStatus.PAUSED,
-    currentTime: MusicService.currentTime(),
+    time: MusicService.currentTime(),
   });
 }
 
 export async function handleSeek(currentlyPlaying: CurrentlyPlaying) {
   log("Seek event detected");
   currentlyPlaying.setValues({
-    currentTime: MusicService.currentTime(),
+    time: MusicService.currentTime(),
   });
 }
 
