@@ -34,16 +34,16 @@ export class CurrentlyPlaying {
   }
 
   public setValues(args: any) {
-    this.watchID = args.watchID || this.watchID;
-    this.trackName = args.trackName || this.trackName;
-    this.artistID = args.artistID || this.artistID;
-    this.artistName = args.artistName || this.artistName;
-    this.cover = args.cover || this.cover;
-    this.status = args.status || this.status;
-    this.isMusic = args.isMusic || this.isMusic;
-    this.length = args.length || this.length;
-    this.currentTime = args.currentTime || this.currentTime;
-    this.updatedAt = args.updatedAt || this.updatedAt;
+    this.watchID = args.watchID ?? this.watchID;
+    this.trackName = args.trackName ?? this.trackName;
+    this.artistID = args.artistID ?? this.artistID;
+    this.artistName = args.artistName ?? this.artistName;
+    this.cover = args.cover ?? this.cover;
+    this.status = args.status ?? this.status;
+    this.isMusic = args.isMusic ?? this.isMusic;
+    this.length = args.length ?? this.length;
+    this.currentTime = args.currentTime ?? this.currentTime;
+    this.updatedAt = args.updatedAt ?? this.updatedAt;
     this.update();
   }
 
