@@ -1,5 +1,5 @@
 import { chromeReceiveMessage } from "../../common/Chrome";
-import { WSMessageType } from "../../common/interface";
+import { RequestOperationType } from "../../common/websocket";
 import {
   changeWebsocketURL,
   restartWebsocket,
@@ -9,7 +9,7 @@ import {
 } from "./WebSocket";
 
 chromeReceiveMessage({ type: "ACTION", key: "MusicListened" }, (data) => {
-  sendMessageToWebSocket(WSMessageType.MUSIC_LISTENED, data.value);
+  sendMessageToWebSocket(RequestOperationType.MUSIC_STARTED, data.value);
 });
 
 chromeReceiveMessage(

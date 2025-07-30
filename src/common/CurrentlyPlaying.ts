@@ -1,4 +1,4 @@
-import { Decision, MusicStatus } from "./interface";
+import { VideoStatus } from "./interface";
 
 export class CurrentlyPlaying {
   watchID?: string;
@@ -6,12 +6,12 @@ export class CurrentlyPlaying {
   artistID?: string;
   artistName?: string;
   cover?: string;
-  status?: MusicStatus;
-  isMusic?: Decision;
+  status?: VideoStatus;
+  isMusic?: boolean;
   length?: number;
   currentTime?: number;
   updatedAt?: number;
-  constructor() {}
+  constructor() { }
 
   public static copy(copy: CurrentlyPlaying) {
     const newCurrentlyPlaying = new CurrentlyPlaying();
@@ -51,7 +51,7 @@ export class CurrentlyPlaying {
   public get time() {
     if (!this.updatedAt) return 0;
     if (!this.currentTime) return 0;
-    return this.status === MusicStatus.PLAYING
+    return this.status === VideoStatus.PLAYING
       ? (Date.now() - this.updatedAt + this.currentTime * 1000) / 1000
       : this.currentTime;
   }
@@ -73,7 +73,7 @@ export class CurrentlyPlaying {
   }
 
   public endSong() {
-    this.status = MusicStatus.ENDED;
+    this.status = VideoStatus.ENDED;
     this.update();
     this.end();
   }

@@ -1,4 +1,4 @@
-import { Decision, MusicStatus } from "../common/interface";
+import { VideoStatus } from "../common/interface";
 import { log } from "./Logging";
 import { MusicService } from "./service/MusicService";
 import { forwardToWebsocket } from "./WebSocket";
@@ -8,9 +8,6 @@ export async function handleLoadedMetadata(
   strategy: typeof MusicService,
   currentlyPlaying: CurrentlyPlaying
 ) {
-  const isSong = await strategy.determineIfSong();
-  if (isSong === Decision.NO) return;
-
   log("New possible music detected");
   let data = await strategy.pullData();
   currentlyPlaying.setValues({
@@ -19,29 +16,28 @@ export async function handleLoadedMetadata(
     artistID: data.authorHandle,
     artistName: data.artist,
     cover: data.cover,
-    status: MusicStatus.PLAYING,
+    status: VideoStatus.PLAYING,
     length: data.length,
-    isMusic: isSong,
   });
   currentlyPlaying.time = strategy.currentTime();
 }
 
 export async function handleEnded(currentlyPlaying: CurrentlyPlaying) {
-  currentlyPlaying.status = MusicStatus.ENDED;
+  currentlyPlaying.status = VideoStatus.ENDED;
   log("Music sent to websocket");
-  const { watchID, artistID } = currentlyPlaying;
-  forwardToWebsocket({ watchID, artistID });
+  const { watchID } = currentlyPlaying;
+  forwardToWebsocket({ watchID, currentTime: currentlyPlaying.time, status: currentlyPlaying.status });
 }
 
 export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
   log("Resume event detected");
-  currentlyPlaying.status = MusicStatus.PLAYING;
+  currentlyPlaying.status = VideoStatus.PLAYING;
   currentlyPlaying.time = MusicService.currentTime();
 }
 
 export async function handlePause(currentlyPlaying: CurrentlyPlaying) {
   log("Pause event detected");
-  currentlyPlaying.status = MusicStatus.PAUSED;
+  currentlyPlaying.status = VideoStatus.PAUSED;
   currentlyPlaying.time = MusicService.currentTime();
 }
 

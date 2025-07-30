@@ -1,4 +1,3 @@
-import { WSMessageType } from "../../common/interface";
 import { RequestOperationType, ResponseOperationType } from "../../common/websocket";
 
 export let webSocket: WebSocket | null = null;
@@ -50,14 +49,14 @@ export function restartWebsocket() {
   connect();
 }
 
-function heartbeat() {
-  const keepAliveIntervalId = setInterval(() => {
-    if (webSocket) sendMessageToWebSocket(WSMessageType.PING);
-    else clearInterval(keepAliveIntervalId);
-  }, 20 * 1000);
-}
+// function heartbeat() {
+//   const keepAliveIntervalId = setInterval(() => {
+//     if (webSocket) sendMessageToWebSocket(WSMessageType.PING);
+//     else clearInterval(keepAliveIntervalId);
+//   }, 20 * 1000);
+// }
 
-export function sendMessageToWebSocket(type: WSMessageType, payload?: object) {
+export function sendMessageToWebSocket(type: RequestOperationType, payload?: object) {
   const data = {
     op: type,
     d: payload || {},
