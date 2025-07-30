@@ -1,5 +1,4 @@
 import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
-import { VideoStatus } from "../../common/interface";
 import { RequestOperationType, ResponseOperationType, VideoResponseData } from "../../common/websocket";
 
 export let webSocket: WebSocket | null = null;
@@ -11,7 +10,7 @@ export function connect() {
 
   webSocket.onopen = (event) => {
     console.log("websocket open");
-    // heartbeat();
+    heartbeat();
   };
 
   webSocket.onmessage = (event) => {
@@ -45,7 +44,6 @@ async function handleMusicQueryResponse(data: any) {
   currentlyListening.setValues({
     watchID: video.watchID,
     cover: video.coverImage,
-    status: VideoStatus.PLAYING,
     length: video.duration,
     trackName: video.title,
     artistID: video.artist.handle,
@@ -67,12 +65,12 @@ export function restartWebsocket() {
   connect();
 }
 
-// function heartbeat() {
-//   const keepAliveIntervalId = setInterval(() => {
-//     if (webSocket) sendMessageToWebSocket(WSMessageType.PING);
-//     else clearInterval(keepAliveIntervalId);
-//   }, 20 * 1000);
-// }
+function heartbeat() {
+  const keepAliveIntervalId = setInterval(() => {
+    if (webSocket) sendMessageToWebSocket(RequestOperationType.HEARTBEAT);
+    else clearInterval(keepAliveIntervalId);
+  }, 20 * 1000);
+}
 
 export function sendMessageToWebSocket(type: RequestOperationType, payload?: object) {
   const data = {

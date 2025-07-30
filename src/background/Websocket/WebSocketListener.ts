@@ -1,4 +1,4 @@
-import { chromeReceiveMessage } from "../../common/Chrome";
+import { ChromeMessage, chromeReceiveMessage } from "../../common/Chrome";
 import { RequestOperationType } from "../../common/websocket";
 import {
   changeWebsocketURL,
@@ -9,7 +9,7 @@ import {
   webSocketURL,
 } from "./WebSocket";
 
-chromeReceiveMessage({ type: "ACTION", key: "MusicListened" }, (data) => {
+chromeReceiveMessage("VIDEO_UPDATE", (data) => {
   sendMessageToWebSocket(RequestOperationType.MUSIC_STARTED, data.value);
   currentlyListening.setValues({
     watchID: data.value.watchID,
@@ -19,7 +19,7 @@ chromeReceiveMessage({ type: "ACTION", key: "MusicListened" }, (data) => {
 });
 
 chromeReceiveMessage(
-  { type: "GET", key: "websocketStatus" },
+  "GET_WEBSOCKET_STATUS",
   undefined,
   () => ({
     value: webSocket?.readyState,
@@ -28,14 +28,14 @@ chromeReceiveMessage(
 
 // script to popup
 chromeReceiveMessage(
-  { type: "ACTION", key: "currentlyPlayingChanged" },
+  "VIDEO_UPDATE",
   (data) => {
     currentlyListening.setValues(data.value);
   }
 );
 
 chromeReceiveMessage(
-  { type: "GET", key: "currentlyPlaying" },
+  "GET_CURRENTLY_PLAYING",
   undefined,
   () => ({
     value: currentlyListening.safe(),

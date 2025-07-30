@@ -8,10 +8,7 @@ settingsForm.addEventListener("change", () => {
   wait(1000).then(updateWebsocketStatus);
 });
 
-chromeSendMessage({
-  type: "GET",
-  key: "currentlyPlaying",
-}).then((response) => {
+chromeSendMessage("GET_CURRENTLY_PLAYING").then((response) => {
   if (response) {
     setCurrentlyPlaying(response.value);
   }

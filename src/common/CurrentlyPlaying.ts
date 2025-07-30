@@ -1,4 +1,9 @@
-import { VideoStatus } from "./interface";
+
+export enum VideoStatus {
+  PLAYING,
+  PAUSED,
+  ENDED,
+}
 
 export class CurrentlyPlaying {
   watchID?: string;

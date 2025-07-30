@@ -29,7 +29,7 @@ export function setCurrentlyPlaying(cp: CurrentlyPlaying) {
 
 // script to popup
 chromeReceiveMessage(
-  { type: "ACTION", key: "currentlyPlayingChanged" },
+  "GET_CURRENTLY_PLAYING",
   (data) => {
     setCurrentlyPlaying(data.value);
   }

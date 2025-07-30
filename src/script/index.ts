@@ -14,7 +14,6 @@ import Youtube from "./service/Youtube";
 import { MusicService } from "./service/MusicService";
 import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
 import { chromeSendMessage } from "../common/Chrome";
-import { forwardToWebsocket } from "./WebSocket";
 
 function mount(videoElement: HTMLVideoElement) {
   const { hostname } = document.location;
@@ -44,17 +43,7 @@ function mount(videoElement: HTMLVideoElement) {
   log("Succesfully mounted to video player");
 
   currentlyPlaying.onUpdate((currentlyPlaying) => {
-    chromeSendMessage({
-      type: "ACTION",
-      key: "currentlyPlayingChanged",
-      value: currentlyPlaying.safe(),
-    });
-    forwardToWebsocket(
-      {
-        watchID: currentlyPlaying.watchID,
-        currentTime: currentlyPlaying.currentTime,
-        status: currentlyPlaying.status
-      });
+    chromeSendMessage("VIDEO_UPDATE", currentlyPlaying.safe());
   });
 }
 

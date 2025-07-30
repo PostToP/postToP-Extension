@@ -1,8 +1,6 @@
-import { VideoStatus } from "../common/interface";
 import { log } from "./Logging";
 import { MusicService } from "./service/MusicService";
-import { forwardToWebsocket } from "./WebSocket";
-import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
+import { CurrentlyPlaying, VideoStatus } from "../common/CurrentlyPlaying";
 
 export async function handleLoadedMetadata(
   strategy: typeof MusicService,
@@ -18,10 +16,10 @@ export async function handleLoadedMetadata(
 }
 
 export async function handleEnded(currentlyPlaying: CurrentlyPlaying) {
-  currentlyPlaying.status = VideoStatus.ENDED;
-  log("Music sent to websocket");
-  const { watchID } = currentlyPlaying;
-  forwardToWebsocket({ watchID, currentTime: currentlyPlaying.currentTime, status: currentlyPlaying.status });
+  log("Video ended");
+  currentlyPlaying.setValues({
+    status: VideoStatus.ENDED,
+  });
 }
 
 export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
