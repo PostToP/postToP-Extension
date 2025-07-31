@@ -23,6 +23,10 @@ export async function handleEnded(currentlyPlaying: CurrentlyPlaying) {
 }
 
 export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
+  if (currentlyPlaying.status === VideoStatus.STARTED || currentlyPlaying.status === VideoStatus.PLAYING || currentlyPlaying.status === VideoStatus.ENDED) {
+    log("Resume event ignored, already playing or ended");
+    return;
+  }
   log("Resume event detected");
   currentlyPlaying.setValues({
     status: VideoStatus.PLAYING,
