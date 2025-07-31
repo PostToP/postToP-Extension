@@ -42,8 +42,13 @@ function mount(videoElement: HTMLVideoElement) {
 
   log("Succesfully mounted to video player");
 
+
+  let debounceTimeout: NodeJS.Timeout | null = null;
   currentlyPlaying.onUpdate((currentlyPlaying) => {
-    chromeSendMessage("VIDEO_UPDATE", currentlyPlaying.safe());
+    if (debounceTimeout) clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      chromeSendMessage("VIDEO_UPDATE", currentlyPlaying.safe());
+    }, 100);
   });
 }
 
