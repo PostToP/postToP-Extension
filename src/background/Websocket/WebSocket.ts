@@ -39,7 +39,7 @@ async function handleAuthEvent(data: any) {
 }
 
 async function handleMusicQueryResponse(data: any) {
-  if (data.op !== ResponseOperationType.MUSIC_STARTED) return;
+  if (data.op !== ResponseOperationType.VIDEO_UPDATE) return;
   let video = data.d.video as VideoResponseData;
   currentlyListening.setValues({
     watchID: video.watchID,

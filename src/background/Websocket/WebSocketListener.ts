@@ -10,7 +10,7 @@ import {
 } from "./WebSocket";
 
 chromeReceiveMessage("VIDEO_UPDATE", (data) => {
-  sendMessageToWebSocket(RequestOperationType.MUSIC_STARTED, data.value);
+  sendMessageToWebSocket(RequestOperationType.VIDEO_UPDATE, data.value);
   currentlyListening.setValues({
     watchID: data.value.watchID,
     time: data.value.currentTime,

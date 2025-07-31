@@ -23,8 +23,9 @@ export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
   let statusText = "Unknown";
   if (cp.status === undefined) statusText = "Unknown";
   else if (cp.status === 0) statusText = "Playing";
-  else if (cp.status === 1) statusText = "Paused";
-  else if (cp.status === 2) statusText = "Ended";
+  else if (cp.status === 1) statusText = "Playing";
+  else if (cp.status === 2) statusText = "Paused";
+  else if (cp.status === 3) statusText = "Ended";
   $id("currentlyPlayingStatus")!.innerText = statusText;
   $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.time || 0);
 

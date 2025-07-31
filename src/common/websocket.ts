@@ -2,9 +2,7 @@ export enum RequestOperationType {
     AUTH = 1,
     EAVESDROP = 2,
     HEARTBEAT = 3,
-    MUSIC_STARTED = 4,
-    MUSIC_UPDATE = 5,
-    MUSIC_ENDED = 6,
+    VIDEO_UPDATE = 5,
 }
 
 export enum ResponseOperationType {
@@ -12,9 +10,7 @@ export enum ResponseOperationType {
     AUTHENTICATED = 101,
     EAVESDROPPED = 102,
     PONG = 103,
-    MUSIC_STARTED = 104,
-    MUSIC_UPDATE = 105,
-    MUSIC_ENDED = 106,
+    VIDEO_UPDATE = 105,
     REQUEST_STATUS = 107,
     ERROR = 400,
 }
@@ -57,6 +53,7 @@ export interface ListeingData extends WebsocketData {
 
 
 export enum VideoStatus {
+    STARTED,
     PLAYING,
     PAUSED,
     ENDED,

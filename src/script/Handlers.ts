@@ -10,7 +10,7 @@ export async function handleLoadedMetadata(
   let data = await strategy.pullData();
   currentlyPlaying.setValues({
     watchID: data.watchID,
-    status: VideoStatus.PLAYING,
+    status: VideoStatus.STARTED,
     time: strategy.currentTime(),
   });
 }
