@@ -59,8 +59,8 @@ export class CurrentlyPlaying {
   }
 
   public get time() {
-    if (!this.updatedAt) return 0;
-    if (!this.currentTime) return 0;
+    if (this.updatedAt === undefined) return 0;
+    if (this.currentTime === undefined) return 0;
     return (this.status === VideoStatus.PLAYING || this.status === VideoStatus.STARTED)
       ? (Date.now() - this.updatedAt + this.currentTime * 1000) / 1000
       : this.currentTime;
