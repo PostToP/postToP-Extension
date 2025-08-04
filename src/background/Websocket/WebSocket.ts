@@ -48,6 +48,7 @@ async function handleMusicQueryResponse(data: any) {
     trackName: video.title,
     artistID: video.artist.handle,
     artistName: video.artist.name,
+    isMusic: video.isMusic,
   });
 }
 

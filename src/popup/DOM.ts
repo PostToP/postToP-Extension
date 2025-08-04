@@ -28,6 +28,8 @@ export function setCurrentlyPlayingDOM(cp: CurrentlyPlaying) {
   else if (cp.status === 3) statusText = "Ended";
   $id("currentlyPlayingStatus")!.innerText = statusText;
   $id("currentlyPlayingTime")!.innerText = secondsToHms(cp.time || 0);
+  $id("currentlyPlayingIsMusic")!.innerText = `${cp.isMusic?.is_music ? "Yes" : "No"}${cp.isMusic?.reviewed ? " (Reviewed)" : ""
+    }`;
 
   clearInterval(currentlyPlayingSecondsInterval);
   currentlyPlayingSecondsInterval = setInterval(() => {

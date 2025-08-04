@@ -13,7 +13,10 @@ export class CurrentlyPlaying {
   artistName?: string;
   cover?: string;
   status?: VideoStatus;
-  isMusic?: boolean;
+  isMusic?: {
+    is_music: boolean;
+    reviewed: boolean;
+  }
   length?: number;
   currentTime?: number;
   updatedAt?: number;
