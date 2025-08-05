@@ -2,11 +2,11 @@ import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
 import { RequestOperationType, ResponseOperationType, VideoResponseData } from "../../common/websocket";
 
 export let webSocket: WebSocket | null = null;
-export let webSocketURL: string = "ws://localhost:8000";
+export let serverAddress: string = "localhost:8000";
 export let currentlyListening = new CurrentlyPlaying();
 
 export function connect() {
-  webSocket = new WebSocket(webSocketURL);
+  webSocket = new WebSocket(`ws://${serverAddress}`);
 
   webSocket.onopen = (event) => {
     console.log("websocket open");
@@ -57,8 +57,8 @@ function disconnectWebsocket() {
   webSocket.close();
 }
 
-export function changeWebsocketURL(url: string) {
-  webSocketURL = url;
+export function changeServerAddress(url: string) {
+  serverAddress = url;
 }
 
 export function restartWebsocket() {

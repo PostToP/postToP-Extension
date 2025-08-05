@@ -3,7 +3,7 @@ import { chromeSendMessage } from "../../common/Chrome";
 
 export function SettingsForm() {
     const [websocketStatus, setWebsocketStatus] = useState(0);
-    const [webSocketURL, setWebSocketURL] = useState("ws://localhost:8000");
+    const [serverAddress, setServerAddress] = useState("ws://localhost:8000");
     const [logLevel, setLogLevel] = useState("Info");
     const [ytEnabled, setYtEnabled] = useState(false);
     const [ytMusicEnabled, setYtMusicEnabled] = useState(false);
@@ -17,11 +17,11 @@ export function SettingsForm() {
         });
 
         chrome.storage.local.get(["settings"], function (result) {
-            let { logLevel, yt, ytmusic, webSocketURL } = result.settings;
+            let { logLevel, yt, ytmusic, serverAddress } = result.settings;
             setLogLevel(logLevel ?? "Info");
             setYtEnabled(yt ?? false);
             setYtMusicEnabled(ytmusic ?? false);
-            setWebSocketURL(webSocketURL ?? "ws://localhost:8000");
+            setServerAddress(serverAddress ?? "ws://localhost:8000");
         });
     }, []);
 
@@ -31,25 +31,25 @@ export function SettingsForm() {
             logLevel,
             yt: ytEnabled,
             ytmusic: ytMusicEnabled,
-            webSocketURL,
+            serverAddress: serverAddress,
         };
         chrome.storage.local.set({ settings });
     }
     return <form onSubmit={handleSave}>
-        <p>WS address: <input type="text" value={webSocketURL} /></p>
+        <p>Server address: <input type="text" value={serverAddress} onChange={e => setServerAddress((e.target as HTMLInputElement).value)} /></p>
         <p>WS status: {websocketStatus ? "Connected" : "Disconnected"}</p>
         <p>
             Logging Level:
-            <select name="log" value={logLevel}>
+            <select name="log" value={logLevel} onChange={e => setLogLevel((e.target as HTMLSelectElement).value)}>
                 <option value="None">None</option>
                 <option value="Info">Info</option>
             </select>
         </p>
         <div>
-            <p>Youtube: <input type="checkbox" name="yt" checked={ytEnabled} /></p>
+            <p>Youtube: <input type="checkbox" name="yt" checked={ytEnabled} onChange={e => setYtEnabled((e.target as HTMLInputElement).checked)} /></p>
             <p>
                 Youtube Music:
-                <input type="checkbox" name="ytmusic" checked={ytMusicEnabled} />
+                <input type="checkbox" name="ytmusic" checked={ytMusicEnabled} onChange={e => setYtMusicEnabled((e.target as HTMLInputElement).checked)} />
             </p>
         </div>
         <input type="submit" value="Save" />

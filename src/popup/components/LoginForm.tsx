@@ -1,10 +1,9 @@
 import { useEffect, useState } from "preact/hooks";
-import { getWebSocketURL } from "../utils";
+import { getServerAddress } from "../utils";
 
 async function sendLoginRequest(username: string, password: string) {
-    let url = await getWebSocketURL();
-    url = url.replace("ws://", "http://");
-    url += "/auth";
+    const address = await getServerAddress();
+    const url = `http://${address}/login`;
     const queryParams = new URLSearchParams({
         username: username,
         password: password,

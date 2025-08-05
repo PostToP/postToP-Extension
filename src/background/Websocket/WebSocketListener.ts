@@ -1,12 +1,12 @@
 import { ChromeMessage, chromeReceiveMessage } from "../../common/Chrome";
 import { RequestOperationType } from "../../common/websocket";
 import {
-  changeWebsocketURL,
+  changeServerAddress,
   currentlyListening,
   restartWebsocket,
   sendMessageToWebSocket,
   webSocket,
-  webSocketURL,
+  serverAddress,
 } from "./WebSocket";
 
 chromeReceiveMessage("VIDEO_UPDATE", (data) => {
@@ -45,8 +45,8 @@ chromeReceiveMessage(
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace !== "local") return;
   let restart = false;
-  if (changes["settings"].newValue["webSocketURL"] !== webSocketURL) {
-    changeWebsocketURL(changes["settings"].newValue["webSocketURL"]);
+  if (changes["settings"].newValue["serverAddress"] !== serverAddress) {
+    changeServerAddress(changes["settings"].newValue["serverAddress"]);
     restart = true;
   }
 

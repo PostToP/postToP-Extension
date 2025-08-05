@@ -1,6 +1,6 @@
-import { changeWebsocketURL, restartWebsocket } from "./WebSocket";
+import { changeServerAddress, restartWebsocket } from "./WebSocket";
 
 chrome.storage.local.get(["settings"], function (result) {
-  changeWebsocketURL(result.settings.webSocketURL);
+  changeServerAddress(result.settings.serverAddress);
   restartWebsocket();
 });

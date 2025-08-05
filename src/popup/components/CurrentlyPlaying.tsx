@@ -2,13 +2,12 @@ import { useEffect, useState } from "preact/hooks";
 import { CurrentlyPlaying, VideoStatus } from "../../common/CurrentlyPlaying";
 import { chromeReceiveMessage, chromeSendMessage } from "../../common/Chrome";
 import { Time } from "./Time";
-import { getWebSocketURL } from "../utils";
+import { getServerAddress } from "../utils";
 
 async function submitReview(watchID: string, isMusic: boolean) {
     const token = await chrome.storage.local.get("authToken");
-    let url = await getWebSocketURL();
-    url = url.replace("ws://", "http://");
-    url += "/review/music";
+    const address = await getServerAddress();
+    const url = `http://${address}/review/music`;
     const res = await fetch(url, {
         method: "POST",
         headers: {
