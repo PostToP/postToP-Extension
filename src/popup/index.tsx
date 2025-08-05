@@ -7,7 +7,10 @@ function App() {
     return (
         <>
             <LoginForm />
-            <SettingsForm />
+            <details>
+                <summary>Settings</summary>
+                <SettingsForm />
+            </details>
             <CurrentlyPlayingData />
         </>
     );

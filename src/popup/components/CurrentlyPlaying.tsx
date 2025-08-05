@@ -78,21 +78,31 @@ export function CurrentlyPlayingData() {
             <div>
                 <p>Currently playing:</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", lineBreak: "anywhere", wordBreak: "break-all", gap: "10px" }}>
-                    <img style={{
-                        width: "100%", height: "100%", objectFit: "cover"
-                    }} src={currentlyPlaying.cover} />
+                    <div style={{
+                        aspectRatio: "1/1",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        overflow: "hidden"
+                    }}>
+                        <img style={{
+                            width: "135%",
+                            height: "135%",
+                            objectFit: "cover"
+                        }} src={currentlyPlaying.cover} />
+                    </div>
                     <div>
-                        <p>
-                            Title: {currentlyPlaying.trackName} ({currentlyPlaying.watchID})
-                        </p>
-                        <p>
-                            Artist: {currentlyPlaying.artistName} ({currentlyPlaying.artistID})
-                        </p>
-                        <p>Status: {renderStatus(currentlyPlaying.status)}</p>
-                        <p>
+                        <div>
+                            Title: <a href={`https://music.youtube.com/watch?v=${currentlyPlaying.watchID}`} target="_blank">{currentlyPlaying.trackName}</a>
+                        </div>
+                        <div>
+                            Artist:<a href={`https://music.youtube.com/channel/${currentlyPlaying.artistID}`} target="_blank"> {currentlyPlaying.artistName}</a>
+                        </div>
+                        <div>Status: {renderStatus(currentlyPlaying.status)}</div>
+                        <div>
                             <Time seconds={currentlyPlaying.time} frozen={currentlyPlaying.status == VideoStatus.PAUSED} /> / <Time seconds={currentlyPlaying.length} frozen />
-                        </p>
-                        <p>Is Music: {currentlyPlaying.isMusic?.is_music ? "Yes" : "No"} {currentlyPlaying.isMusic?.reviewed && <>(Reviewed)</>}</p>
+                        </div>
+                        <div>Is Music: {currentlyPlaying.isMusic?.is_music ? "Yes" : "No"} {currentlyPlaying.isMusic?.reviewed && <>(Reviewed)</>}</div>
                         {!currentlyPlaying.isMusic?.reviewed &&
                             <div class="flex hidden">
                                 <button>Yes</button>
@@ -101,6 +111,6 @@ export function CurrentlyPlayingData() {
                         }
                     </div>
                 </div>
-            </div>
+            </div >
         }</>
 }
