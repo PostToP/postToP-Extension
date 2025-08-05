@@ -7,7 +7,8 @@
     "esModuleInterop": true,
     "sourceMap": false,
     "noEmitOnError": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "typeRoots": [
       "node_modules/@types"
     ]

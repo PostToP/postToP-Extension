@@ -2,76 +2,20 @@
 <html>
 
 <head>
-  <title>Media Session Tracker</title>
+  <title>PostToP Extension</title>
   <style>
     body {
-      width: 200px;
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      padding: 10px;
-    }
-
-    .flex {
-      display: flex;
-      align-items: center;
-    }
-
-    .hidden {
-      display: none;
+      width: 300px;
     }
   </style>
 </head>
 
-<body style="width: 300px">
-  <form id="authForm">
-    <p>Username: <input type="text" id="username"></p>
-    <p>Password: <input type="password" id="password"></p>
-    <p><button type="submit" id="loginButton">Login</button></p>
-  </form>
-  <form id="settingsForm">
-    <p>WS address: <input type="text" name="" id="webSocketURL" /></p>
-    <p>WS status: <span id="websocketStatus"></span></p>
-    <p>
-      Logging Level:
-      <select name="log" id="log">
-        <option value="None">None</option>
-        <option value="Info">Info</option>
-      </select>
-    </p>
-    <div id="connectedSettingsForm">
-      <p>Youtube: <input type="checkbox" name="yt" id="yt" /></p>
-      <p>
-        Youtube Music:
-        <input type="checkbox" name="ytmusic" id="ytmusic" />
-      </p>
-    </div>
-  </form>
-  <div>
-    <p>Currently playing:</p>
-    <div id="currentlyPlaying" style="
-          display: grid;
-          grid-template-columns: 1fr 2fr;
-          line-break: anywhere;
-          word-break: break-all;
-          gap: 10px;
-        ">
-      <img id="currentlyPlayingImg" style="width: 100%; height: 100%; object-fit: cover" />
-      <div>
-        <p>
-          Title: <span id="currentlyPlayingTitle"></span> (<span id="currentlyPlayingID"></span>)
-        </p>
-        <p>
-          Artist: <span id="currentlyPlayingArtist"></span> (<span id="currentlyPlayingArtistID"></span>)
-        </p>
-        <p>Status: <span id="currentlyPlayingStatus"></span></p>
-        <p>
-          <span id="currentlyPlayingTime"></span>/<span id="currentlyPlayingMaxTime"></span>
-        </p>
-        <p>Is Music: <span id="currentlyPlayingIsMusic"></span></p>
-      </div>
-    </div>
-  </div>
+<body>
+  <div id="root"></div>
+  <script src="js/popup.js"></script>
 </body>
-
-<script src="js/popup.js" defer type="module"></script>
 
 </html>

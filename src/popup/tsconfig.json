@@ -3,7 +3,9 @@
     "compilerOptions": {
         "rootDir": "..",
         "outDir": "../../dist/js",
-        "composite": true
+        "composite": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "preact",
     },
     "include": [
         "./**/*",
