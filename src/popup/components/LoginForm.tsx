@@ -3,14 +3,18 @@ import { getServerAddress } from "../utils";
 
 async function sendLoginRequest(username: string, password: string) {
     const address = await getServerAddress();
-    const url = `http://${address}/login`;
-    const queryParams = new URLSearchParams({
+    const url = `http://${address}/auth`;
+    const body = JSON.stringify({
         username: username,
         password: password,
-    }).toString();
+    });
 
-    const res = await fetch(url + "?" + queryParams, {
-        method: "GET",
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: body,
     })
     if (!res.ok) {
         throw new Error("Login failed: " + res.statusText);
