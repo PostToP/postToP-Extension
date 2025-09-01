@@ -39,6 +39,7 @@ function mount(videoElement: HTMLVideoElement) {
 
   videoElement.addEventListener("ended", () => handleEnded(currentlyPlaying));
   videoElement.addEventListener("abort", () => handleAbort(currentlyPlaying));
+  videoElement.addEventListener("emptied", () => handleAbort(currentlyPlaying));
 
   log("Succesfully mounted to video player");
 
