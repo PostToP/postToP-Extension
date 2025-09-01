@@ -1,3 +1,4 @@
+import { chromeSendMessage } from "../../common/Chrome";
 import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
 import { RequestOperationType, ResponseOperationType, VideoResponseData } from "../../common/websocket";
 
@@ -50,6 +51,9 @@ async function handleMusicQueryResponse(data: any) {
     artistName: video.artist.name,
     isMusic: video.isMusic,
   });
+  chromeSendMessage("VIDEO_UPDATE", {
+    value: currentlyListening.safe(),
+  }, "BACKGROUND");
 }
 
 function disconnectWebsocket() {

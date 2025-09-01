@@ -16,7 +16,7 @@ chromeReceiveMessage("VIDEO_UPDATE", (data) => {
     time: data.value.currentTime,
     status: data.value.status,
   });
-});
+}, undefined, "BACKGROUND");
 
 chromeReceiveMessage(
   "GET_WEBSOCKET_STATUS",
@@ -26,13 +26,6 @@ chromeReceiveMessage(
   })
 );
 
-// script to popup
-chromeReceiveMessage(
-  "VIDEO_UPDATE",
-  (data) => {
-    currentlyListening.setValues(data.value);
-  }
-);
 
 chromeReceiveMessage(
   "GET_CURRENTLY_PLAYING",

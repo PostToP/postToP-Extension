@@ -64,18 +64,33 @@ export function CurrentlyPlayingData() {
 
         chromeReceiveMessage("VIDEO_UPDATE", (request) => {
             console.log("Received VIDEO_UPDATE:", request);
-            if (request.value) {
-                setCurrentlyPlaying((prev) => {
-                    const newCP = prev ? CurrentlyPlaying.copy(prev) : new CurrentlyPlaying();
-                    newCP.setValues(request.value);
-                    return newCP;
-                });
-            }
+            setCurrentlyPlaying((prev) => {
+                const newCP = prev ? CurrentlyPlaying.copy(prev) : new CurrentlyPlaying();
+                newCP.setValues(request.value.value);
+                return newCP;
+            });
         });
     }, []);
+
+    function handleReview(isMusic: boolean) {
+        submitReview(currentlyPlaying!.watchID!, isMusic)
+            .then(() => {
+                setCurrentlyPlaying((prev) => {
+                    const newCP = prev ? CurrentlyPlaying.copy(prev) : new CurrentlyPlaying();
+                    newCP.setValues({
+                        isMusic: {
+                            is_music: prev?.isMusic?.is_music,
+                            reviewed: true,
+                        },
+                    });
+                    return newCP;
+                });
+            })
+    }
+
     return <>
         {currentlyPlaying && currentlyPlaying.watchID &&
-            <div>
+            <div key={currentlyPlaying}>
                 <p>Currently playing:</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", lineBreak: "anywhere", wordBreak: "break-all", gap: "10px" }}>
                     <div style={{
@@ -104,9 +119,9 @@ export function CurrentlyPlayingData() {
                         </div>
                         <div>Is Music: {currentlyPlaying.isMusic?.is_music ? "Yes" : "No"} {currentlyPlaying.isMusic?.reviewed && <>(Reviewed)</>}</div>
                         {!currentlyPlaying.isMusic?.reviewed &&
-                            <div class="flex hidden">
-                                <button>Yes</button>
-                                <button>No</button>
+                            <div>
+                                <button onClick={_ => handleReview(true)}>Yes</button>
+                                <button onClick={_ => handleReview(false)}>No</button>
                             </div>
                         }
                     </div>

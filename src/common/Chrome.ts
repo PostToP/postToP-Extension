@@ -1,8 +1,9 @@
 export function chromeSendMessage(
   op: ChromeMessage,
-  value?: any
+  value?: any,
+  from?: ChromeMessageFrom
 ): Promise<IChromeResponse> {
-  const message: IChromeMessage = { op, value };
+  const message: IChromeMessage = { op, from, value };
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage(message, (response) => {
       if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
@@ -14,9 +15,11 @@ export function chromeSendMessage(
 export function chromeReceiveMessage(
   op: ChromeMessage,
   callback?: (response: IChromeMessage) => void,
-  response?: () => IChromeResponse
+  response?: () => IChromeResponse,
+  ignoreFrom?: ChromeMessageFrom
 ) {
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (ignoreFrom && request.from === ignoreFrom) return;
     if (request.op !== op) return;
     if (callback) callback(request);
     if (response) sendResponse(response());
@@ -25,12 +28,15 @@ export function chromeReceiveMessage(
 
 export interface IChromeMessage<T = any> {
   op: ChromeMessage;
+  from?: ChromeMessageFrom
   value?: T;
 }
 
 export interface IChromeResponse<T = any> {
   value: T;
 }
+
+export type ChromeMessageFrom = "BACKGROUND" | "POPUP" | "CONTENT_SCRIPT";
 
 export type GetChromeMessage = "GET_CURRENTLY_PLAYING" | "GET_WEBSOCKET_STATUS";
 
