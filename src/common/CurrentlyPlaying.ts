@@ -1,4 +1,3 @@
-
 export enum VideoStatus {
   STARTED,
   PLAYING,
@@ -55,7 +54,6 @@ export class CurrentlyPlaying {
   public set time(currentTime: number) {
     this.currentTime = currentTime;
     this.updatedAt = Date.now();
-    this.update();
   }
 
   public get time() {

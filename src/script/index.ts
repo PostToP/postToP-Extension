@@ -12,7 +12,7 @@ import { log } from "./Logging";
 import YoutubeMusic from "./service/YoutubeMusic";
 import Youtube from "./service/Youtube";
 import { MusicService } from "./service/MusicService";
-import { CurrentlyPlaying } from "../common/CurrentlyPlaying";
+import { CurrentlyPlaying, VideoStatus } from "../common/CurrentlyPlaying";
 import { chromeSendMessage } from "../common/Chrome";
 
 function mount(videoElement: HTMLVideoElement) {
@@ -46,6 +46,12 @@ function mount(videoElement: HTMLVideoElement) {
 
   let debounceTimeout: NodeJS.Timeout | null = null;
   currentlyPlaying.onUpdate((currentlyPlaying) => {
+    if (currentlyPlaying.status === VideoStatus.ENDED) {
+      if (debounceTimeout) clearTimeout(debounceTimeout);
+      chromeSendMessage("VIDEO_UPDATE", currentlyPlaying.safe());
+      return;
+    }
+
     if (debounceTimeout) clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(() => {
       chromeSendMessage("VIDEO_UPDATE", currentlyPlaying.safe());
