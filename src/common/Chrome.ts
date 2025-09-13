@@ -16,14 +16,13 @@ export function chromeSendMessageFactory(from: ChromeMessageFrom | null = null) 
 export function chromeReceiveMessageFactory(from: ChromeMessageFrom | null = null) {
   return function chromeReceiveMessage(
     op: ChromeMessage,
-    callback?: (response: IChromeMessage) => void,
-    response?: () => IChromeResponse,
+    handler: (response: IChromeMessage) => IChromeResponse | void,
   ) {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (from && request.from === from) return;
       if (request.op !== op) return;
-      if (callback) callback(request);
-      if (response) sendResponse(response());
+      const response = handler(request);
+      if (response) sendResponse(response);
     });
   }
 }

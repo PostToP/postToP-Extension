@@ -16,11 +16,10 @@ chromeReceiveMessage("VIDEO_UPDATE", (data) => {
     time: data.value.currentTime,
     status: data.value.status,
   });
-}, undefined);
+});
 
 chromeReceiveMessage(
   "GET_WEBSOCKET_STATUS",
-  undefined,
   () => ({
     value: webSocket?.readyState,
   })
@@ -29,7 +28,6 @@ chromeReceiveMessage(
 
 chromeReceiveMessage(
   "GET_CURRENTLY_PLAYING",
-  undefined,
   () => ({
     value: currentlyListening.safe(),
   })
