@@ -11,6 +11,10 @@ import {
 
 chromeReceiveMessage("VIDEO_UPDATE", (data) => {
   sendMessageToWebSocket(RequestOperationType.VIDEO_UPDATE, data.value);
+  if (!data.value.watchID) {
+    currentlyListening.clear();
+    return;
+  }
   currentlyListening.setValues({
     watchID: data.value.watchID,
     time: data.value.currentTime,
