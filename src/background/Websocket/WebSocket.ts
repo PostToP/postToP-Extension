@@ -1,6 +1,7 @@
 import { chromeSendMessage } from "../../common/Chrome";
 import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
 import { RequestOperationType, ResponseOperationType, VideoResponseData } from "../../common/websocket";
+import { updateIcon } from "../icon";
 
 export let webSocket: WebSocket | null = null;
 export let serverAddress: string = "localhost:8000";
@@ -12,6 +13,7 @@ export function connect() {
   webSocket.onopen = (event) => {
     console.log("websocket open");
     heartbeat();
+    updateIcon(true);
   };
 
   webSocket.onmessage = (event) => {
@@ -24,6 +26,7 @@ export function connect() {
   webSocket.onclose = (event) => {
     console.log("websocket connection closed");
     webSocket = null;
+    updateIcon(false);
   };
 }
 
