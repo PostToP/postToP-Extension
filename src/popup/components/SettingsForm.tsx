@@ -3,7 +3,7 @@ import { chromeSendMessage } from "../../common/Chrome";
 
 export function SettingsForm() {
     const [websocketStatus, setWebsocketStatus] = useState(0);
-    const [serverAddress, setServerAddress] = useState("ws://localhost:8000");
+    const [serverAddress, setServerAddress] = useState("localhost:8000");
     const [logLevel, setLogLevel] = useState("Info");
     const [ytEnabled, setYtEnabled] = useState(false);
     const [ytMusicEnabled, setYtMusicEnabled] = useState(false);
@@ -21,7 +21,7 @@ export function SettingsForm() {
             setLogLevel(logLevel ?? "Info");
             setYtEnabled(yt ?? false);
             setYtMusicEnabled(ytmusic ?? false);
-            setServerAddress(serverAddress ?? "ws://localhost:8000");
+            setServerAddress(serverAddress ?? "localhost:8000");
         });
     }, []);
 
