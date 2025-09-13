@@ -1,5 +1,5 @@
-import { ChromeMessage, chromeReceiveMessage } from "../../common/Chrome";
 import { RequestOperationType } from "../../common/websocket";
+import { chromeReceiveMessage } from "../Chrome";
 import {
   changeServerAddress,
   currentlyListening,
@@ -16,7 +16,7 @@ chromeReceiveMessage("VIDEO_UPDATE", (data) => {
     time: data.value.currentTime,
     status: data.value.status,
   });
-}, undefined, "BACKGROUND");
+}, undefined);
 
 chromeReceiveMessage(
   "GET_WEBSOCKET_STATUS",

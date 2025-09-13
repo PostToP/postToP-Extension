@@ -1,8 +1,8 @@
 import { useEffect, useState } from "preact/hooks";
 import { CurrentlyPlaying, VideoStatus } from "../../common/CurrentlyPlaying";
-import { chromeReceiveMessage, chromeSendMessage } from "../../common/Chrome";
 import { Time } from "./Time";
 import { getServerAddress } from "../utils";
+import { chromeReceiveMessage, chromeSendMessage } from "../Chrome";
 
 async function submitReview(watchID: string, isMusic: boolean) {
     const token = await chrome.storage.local.get("authToken");

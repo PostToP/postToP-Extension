@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { chromeSendMessage } from "../../common/Chrome";
+import { chromeSendMessage } from "../Chrome";
 
 export function SettingsForm() {
     const [websocketStatus, setWebsocketStatus] = useState(0);

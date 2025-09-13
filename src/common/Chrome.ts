@@ -1,34 +1,36 @@
-export function chromeSendMessage(
-  op: ChromeMessage,
-  value?: any,
-  from?: ChromeMessageFrom
-): Promise<IChromeResponse> {
-  const message: IChromeMessage = { op, from, value };
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(message, (response) => {
-      if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
-      else resolve(response as IChromeResponse);
+export function chromeSendMessageFactory(from: ChromeMessageFrom | null = null) {
+  return function chromeSendMessage(
+    op: ChromeMessage,
+    value?: any,
+  ): Promise<IChromeResponse> {
+    const message: IChromeMessage = { op, from, value };
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(message, (response) => {
+        if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+        else resolve(response as IChromeResponse);
+      });
     });
-  });
+  }
 }
 
-export function chromeReceiveMessage(
-  op: ChromeMessage,
-  callback?: (response: IChromeMessage) => void,
-  response?: () => IChromeResponse,
-  ignoreFrom?: ChromeMessageFrom
-) {
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (ignoreFrom && request.from === ignoreFrom) return;
-    if (request.op !== op) return;
-    if (callback) callback(request);
-    if (response) sendResponse(response());
-  });
+export function chromeReceiveMessageFactory(from: ChromeMessageFrom | null = null) {
+  return function chromeReceiveMessage(
+    op: ChromeMessage,
+    callback?: (response: IChromeMessage) => void,
+    response?: () => IChromeResponse,
+  ) {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (from && request.from === from) return;
+      if (request.op !== op) return;
+      if (callback) callback(request);
+      if (response) sendResponse(response());
+    });
+  }
 }
 
 export interface IChromeMessage<T = any> {
   op: ChromeMessage;
-  from?: ChromeMessageFrom
+  from?: ChromeMessageFrom | null;
   value?: T;
 }
 

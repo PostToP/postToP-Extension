@@ -13,7 +13,7 @@ import YoutubeMusic from "./service/YoutubeMusic";
 import Youtube from "./service/Youtube";
 import { MusicService } from "./service/MusicService";
 import { CurrentlyPlaying, VideoStatus } from "../common/CurrentlyPlaying";
-import { chromeSendMessage } from "../common/Chrome";
+import { chromeSendMessage } from "./Chrome";
 
 function mount(videoElement: HTMLVideoElement) {
   const { hostname } = document.location;

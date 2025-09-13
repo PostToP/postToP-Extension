@@ -1,6 +1,6 @@
-import { chromeSendMessage } from "../../common/Chrome";
 import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
 import { RequestOperationType, ResponseOperationType, VideoResponseData } from "../../common/websocket";
+import { chromeSendMessage } from "../Chrome";
 import { updateIcon } from "../icon";
 
 export let webSocket: WebSocket | null = null;
@@ -56,7 +56,7 @@ async function handleMusicQueryResponse(data: any) {
   });
   chromeSendMessage("VIDEO_UPDATE", {
     value: currentlyListening.safe(),
-  }, "BACKGROUND");
+  });
 }
 
 function disconnectWebsocket() {
