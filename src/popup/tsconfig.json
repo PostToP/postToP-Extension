@@ -9,7 +9,8 @@
     },
     "include": [
         "./**/*",
-        "../common/**/*"],
+        "../common/**/*"
+    ],
     "exclude": [
         "../background/**/*",
         "../script/**/*",
