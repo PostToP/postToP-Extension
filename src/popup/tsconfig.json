@@ -5,14 +5,14 @@
         "outDir": "../../dist/js",
         "composite": true,
         "jsx": "react-jsx",
-        "jsxImportSource": "preact",
+        "jsxImportSource": "preact"
     },
     "include": [
         "./**/*",
-        "../common/**/*"
-    ],
+        "../common/**/*"],
     "exclude": [
         "../background/**/*",
-        "../script/**/*"
+        "../script/**/*",
+        "../settings/**/*"
     ]
 }

@@ -22,6 +22,9 @@
     },
     {
       "path": "./src/script"
+    },
+    {
+      "path": "./src/settings"
     }
   ],
   "files": []

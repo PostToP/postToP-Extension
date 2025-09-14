@@ -1,5 +1,5 @@
-import { useEffect, useState } from "preact/hooks";
-import { getServerAddress } from "../utils";
+import { useEffect, useState } from "preact/compat";
+import { getServerAddress } from "../../common/utils";
 
 async function sendLoginRequest(username: string, password: string) {
     const address = await getServerAddress();

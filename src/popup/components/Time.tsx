@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/compat";
 
 export function Time({ seconds, frozen = false }: { seconds: number | undefined, frozen?: boolean }) {
     if (seconds === undefined || seconds < 0) {

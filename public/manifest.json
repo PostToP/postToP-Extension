@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "postToP",
   "description": "preMiD alternative",
+  "options_page": "settings.html",
   "version": "1.0",
   "permissions": [
     "tabs",
