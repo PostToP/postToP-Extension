@@ -1,8 +1,8 @@
-import { MusicService } from "./MusicService";
+import {MusicService} from "./MusicService";
 
 export default class YoutubeMusic extends MusicService {
   public static async pullData() {
-    const watchID = await this.getWatchID();
+    const watchID = await YoutubeMusic.getWatchID();
 
     const data = {
       watchID: watchID,
@@ -12,7 +12,7 @@ export default class YoutubeMusic extends MusicService {
 
   private static async getWatchID() {
     const watchID =
-      this.getWatchIDURL() ??
+      YoutubeMusic.getWatchIDURL() ??
       document
         .querySelector<HTMLAnchorElement>("a.ytp-title-link.yt-uix-sessionlink")
         ?.href.match(/v=([^&#]{5,})/)?.[1] ??

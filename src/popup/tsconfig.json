@@ -1,19 +1,19 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "rootDir": "..",
-        "outDir": "../../dist/js",
-        "composite": true,
-        "jsx": "react-jsx",
-        "jsxImportSource": "preact"
-    },
-    "include": [
-        "./**/*",
-        "../common/**/*"
-    ],
-    "exclude": [
-        "../background/**/*",
-        "../script/**/*",
-        "../settings/**/*"
-    ]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "../../dist/js",
+    "composite": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  },
+  "include": [
+    "./**/*",
+    "../common/**/*"
+  ],
+  "exclude": [
+    "../background/**/*",
+    "../script/**/*",
+    "../settings/**/*"
+  ]
 }

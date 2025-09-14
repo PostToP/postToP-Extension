@@ -9,9 +9,7 @@
     "noEmitOnError": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "typeRoots": ["node_modules/@types"]
   },
   "references": [
     {

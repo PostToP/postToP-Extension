@@ -1,17 +1,17 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "rootDir": "..",
-        "outDir": "../../dist/js",
-        "composite": true
-    },
-    "include": [
-        "./**/*",
-        "../common/**/*"
-    ],
-    "exclude": [
-        "../popup/**/*",
-        "../script/**/*",
-        "../settings/**/*"
-    ]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "../../dist/js",
+    "composite": true
+  },
+  "include": [
+    "./**/*",
+    "../common/**/*"
+  ],
+  "exclude": [
+    "../popup/**/*",
+    "../script/**/*",
+    "../settings/**/*"
+  ]
 }

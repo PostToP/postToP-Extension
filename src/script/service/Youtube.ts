@@ -1,8 +1,8 @@
-import { MusicService } from "./MusicService";
+import {MusicService} from "./MusicService";
 
 export default class Youtube extends MusicService {
   public static async pullData() {
-    const watchID = await this.getWatchID();
+    const watchID = await Youtube.getWatchID();
 
     const data = {
       watchID: watchID,
@@ -11,6 +11,6 @@ export default class Youtube extends MusicService {
   }
 
   private static async getWatchID() {
-    return this.getWatchIDURL();
+    return Youtube.getWatchIDURL();
   }
 }

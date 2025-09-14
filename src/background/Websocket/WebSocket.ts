@@ -1,29 +1,29 @@
-import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
-import { RequestOperationType, ResponseOperationType, VideoResponseData } from "../../common/websocket";
-import { chromeSendMessage } from "../Chrome";
-import { updateIcon } from "../icon";
+import {CurrentlyPlaying} from "../../common/CurrentlyPlaying";
+import {RequestOperationType, ResponseOperationType, type VideoResponseData} from "../../common/websocket";
+import {chromeSendMessage} from "../Chrome";
+import {updateIcon} from "../icon";
 
 export let webSocket: WebSocket | null = null;
 export let serverAddress: string = "localhost:8000";
-export let currentlyListening = new CurrentlyPlaying();
+export const currentlyListening = new CurrentlyPlaying();
 
 export function connect() {
   webSocket = new WebSocket(`ws://${serverAddress}`);
 
-  webSocket.onopen = (event) => {
+  webSocket.onopen = _event => {
     console.log("websocket open");
     heartbeat();
     updateIcon(true);
   };
 
-  webSocket.onmessage = (event) => {
+  webSocket.onmessage = event => {
     console.log(`websocket received message: ${event.data}`);
     const data = JSON.parse(event.data);
     handleAuthEvent(data);
     handleMusicQueryResponse(data);
   };
 
-  webSocket.onclose = (event) => {
+  webSocket.onclose = _event => {
     console.log("websocket connection closed");
     webSocket = null;
     updateIcon(false);
@@ -33,18 +33,20 @@ export function connect() {
 async function handleAuthEvent(data: any) {
   if (data.op === ResponseOperationType.DECLARE_INTENT) {
     const token = await chrome.storage.local.get(["authToken"]);
-    webSocket?.send(JSON.stringify({
-      op: RequestOperationType.AUTH,
-      d: {
-        token: token.authToken || "",
-      },
-    }));
+    webSocket?.send(
+      JSON.stringify({
+        op: RequestOperationType.AUTH,
+        d: {
+          token: token.authToken || "",
+        },
+      }),
+    );
   }
 }
 
 async function handleMusicQueryResponse(data: any) {
   if (data.op !== ResponseOperationType.VIDEO_UPDATE) return;
-  let video = data.d.video as VideoResponseData;
+  const video = data.d.video as VideoResponseData;
   currentlyListening.setValues({
     watchID: video.watchID,
     cover: video.coverImage,

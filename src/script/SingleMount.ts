@@ -1,6 +1,6 @@
-// @ts-ignore
+// @ts-expect-error
 if (!window.__postToPInjected) {
-  // @ts-ignore
+  // @ts-expect-error
   window.__postToPInjected = true;
 } else {
   throw Error("Already injected");

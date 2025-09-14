@@ -4,14 +4,11 @@ export class MusicService {
   }
 
   public static currentTime(): number {
-    return (
-      document.querySelector<HTMLVideoElement>("video.video-stream")
-        ?.currentTime ?? 0
-    );
+    return document.querySelector<HTMLVideoElement>("video.video-stream")?.currentTime ?? 0;
   }
 
   protected static getWatchIDURL() {
-    const { href } = document.location;
+    const {href} = document.location;
     const watchID = href.match(/v=([^&#]{5,})/)?.[1];
     return watchID;
   }

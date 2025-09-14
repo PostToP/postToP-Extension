@@ -1,15 +1,15 @@
-import { RequestOperationType } from "../../common/websocket";
-import { chromeReceiveMessage } from "../Chrome";
+import {RequestOperationType} from "../../common/websocket";
+import {chromeReceiveMessage} from "../Chrome";
 import {
   changeServerAddress,
   currentlyListening,
   restartWebsocket,
   sendMessageToWebSocket,
-  webSocket,
   serverAddress,
+  webSocket,
 } from "./WebSocket";
 
-chromeReceiveMessage("VIDEO_UPDATE", (data) => {
+chromeReceiveMessage("VIDEO_UPDATE", data => {
   sendMessageToWebSocket(RequestOperationType.VIDEO_UPDATE, data.value);
   if (!data.value.watchID) {
     currentlyListening.clear();
@@ -22,26 +22,19 @@ chromeReceiveMessage("VIDEO_UPDATE", (data) => {
   });
 });
 
-chromeReceiveMessage(
-  "GET_WEBSOCKET_STATUS",
-  () => ({
-    value: webSocket?.readyState,
-  })
-);
+chromeReceiveMessage("GET_WEBSOCKET_STATUS", () => ({
+  value: webSocket?.readyState,
+}));
 
-
-chromeReceiveMessage(
-  "GET_CURRENTLY_PLAYING",
-  () => ({
-    value: currentlyListening.safe(),
-  })
-);
+chromeReceiveMessage("GET_CURRENTLY_PLAYING", () => ({
+  value: currentlyListening.safe(),
+}));
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   if (namespace !== "local") return;
   let restart = false;
-  if (changes["settings"].newValue["serverAddress"] !== serverAddress) {
-    changeServerAddress(changes["settings"].newValue["serverAddress"]);
+  if (changes.settings.newValue.serverAddress !== serverAddress) {
+    changeServerAddress(changes.settings.newValue.serverAddress);
     restart = true;
   }
 

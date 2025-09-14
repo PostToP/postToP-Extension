@@ -17,13 +17,13 @@ export function waitforElement(selector: string): Promise<Element> {
 
 export function waitforElementToChange(selector: string): Promise<Element> {
   return new Promise((resolve, reject) => {
-    let exists = document.querySelector(selector) as Element;
-    let failsafe = setTimeout(() => {
+    const exists = document.querySelector(selector) as Element;
+    const failsafe = setTimeout(() => {
       observer.disconnect();
       reject("Element not found");
     }, 5000);
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
         if (mutation.type === "attributes") {
           clearTimeout(failsafe);
           observer.disconnect();
@@ -38,9 +38,9 @@ export function waitforElementToChange(selector: string): Promise<Element> {
 }
 
 export async function getMediaSessionInfo() {
-  let title = navigator.mediaSession.metadata?.title || "Unknown";
-  let artist = navigator.mediaSession.metadata?.artist || "Unknown";
-  let cover = navigator.mediaSession.metadata?.artwork[0].src || "Unknown";
+  const title = navigator.mediaSession.metadata?.title || "Unknown";
+  const artist = navigator.mediaSession.metadata?.artist || "Unknown";
+  const cover = navigator.mediaSession.metadata?.artwork[0].src || "Unknown";
 
-  return { title, artist, cover };
+  return {title, artist, cover};
 }

@@ -1,5 +1,5 @@
 export function updateIcon(isConnected: boolean) {
-    fetch(chrome.runtime.getURL("icons/icon-connected-48.png"))
+  fetch(chrome.runtime.getURL("icons/icon-connected-48.png"))
     .then(res => console.log("Icon exists?", res.ok))
     .catch(err => console.error(err));
   chrome.action.setIcon({

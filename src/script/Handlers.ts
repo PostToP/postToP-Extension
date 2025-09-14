@@ -1,13 +1,10 @@
-import { log } from "./Logging";
-import { MusicService } from "./service/MusicService";
-import { CurrentlyPlaying, VideoStatus } from "../common/CurrentlyPlaying";
+import {type CurrentlyPlaying, VideoStatus} from "../common/CurrentlyPlaying";
+import {log} from "./Logging";
+import {MusicService} from "./service/MusicService";
 
-export async function handleLoadedMetadata(
-  strategy: typeof MusicService,
-  currentlyPlaying: CurrentlyPlaying
-) {
+export async function handleLoadedMetadata(strategy: typeof MusicService, currentlyPlaying: CurrentlyPlaying) {
   log("New possible music detected");
-  let data = await strategy.pullData();
+  const data = await strategy.pullData();
   currentlyPlaying.setValues({
     watchID: data.watchID,
     status: VideoStatus.STARTED,
@@ -23,7 +20,11 @@ export async function handleEnded(currentlyPlaying: CurrentlyPlaying) {
 }
 
 export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
-  if (currentlyPlaying.status === VideoStatus.STARTED || currentlyPlaying.status === VideoStatus.PLAYING || currentlyPlaying.status === VideoStatus.ENDED) {
+  if (
+    currentlyPlaying.status === VideoStatus.STARTED ||
+    currentlyPlaying.status === VideoStatus.PLAYING ||
+    currentlyPlaying.status === VideoStatus.ENDED
+  ) {
     log("Resume event ignored, already playing or ended");
     return;
   }

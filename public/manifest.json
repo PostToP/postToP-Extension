@@ -4,12 +4,7 @@
   "description": "preMiD alternative",
   "options_page": "settings.html",
   "version": "1.0",
-  "permissions": [
-    "tabs",
-    "scripting",
-    "activeTab",
-    "storage"
-  ],
+  "permissions": ["tabs", "scripting", "activeTab", "storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -18,10 +13,7 @@
       "128": "icons/icon-disconnected-128.png"
     }
   },
-  "host_permissions": [
-    "https://music.youtube.com/*",
-    "https://www.youtube.com/*"
-  ],
+  "host_permissions": ["https://music.youtube.com/*", "https://www.youtube.com/*"],
   "background": {
     "service_worker": "js/background.js"
   }

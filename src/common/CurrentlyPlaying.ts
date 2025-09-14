@@ -15,11 +15,10 @@ export class CurrentlyPlaying {
   isMusic?: {
     is_music: boolean;
     reviewed: boolean;
-  }
+  };
   length?: number;
   currentTime?: number;
   updatedAt?: number;
-  constructor() { }
 
   public static copy(copy: CurrentlyPlaying) {
     const newCurrentlyPlaying = new CurrentlyPlaying();
@@ -59,25 +58,29 @@ export class CurrentlyPlaying {
   public get time() {
     if (this.updatedAt === undefined) return 0;
     if (this.currentTime === undefined) return 0;
-    return (this.status === VideoStatus.PLAYING || this.status === VideoStatus.STARTED)
+    return this.status === VideoStatus.PLAYING || this.status === VideoStatus.STARTED
       ? (Date.now() - this.updatedAt + this.currentTime * 1000) / 1000
       : this.currentTime;
   }
 
-  private updateEventListeners: Function[] = [];
+  private updateEventListeners: ((currentlyPlaying: CurrentlyPlaying) => void)[] = [];
   public onUpdate(callback: (currentlyPlaying: CurrentlyPlaying) => void) {
     this.updateEventListeners.push(callback);
   }
   private update() {
-    this.updateEventListeners.forEach((cb) => cb(this));
+    this.updateEventListeners.forEach(cb => {
+      cb(this);
+    });
   }
 
-  private endEventListeners: Function[] = [];
+  private endEventListeners: ((currentlyPlaying: CurrentlyPlaying) => void)[] = [];
   public onEnd(callback: (currentlyPlaying: CurrentlyPlaying) => void) {
     this.endEventListeners.push(callback);
   }
   private end() {
-    this.endEventListeners.forEach((cb) => cb(this));
+    this.endEventListeners.forEach(cb => {
+      cb(this);
+    });
   }
 
   public endSong() {
