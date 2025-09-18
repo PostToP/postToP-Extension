@@ -1,3 +1,4 @@
+import "../style/style.css";
 import {render} from "preact";
 import {LoginForm} from "./components/LoginForm";
 import {SettingsForm} from "./components/SettingsForm";

@@ -2,6 +2,7 @@ const _webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const srcDir = path.join(__dirname, "..", "src");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (_env, argv) => {
   const isProduction = argv.mode === "production";
@@ -59,6 +60,11 @@ module.exports = (_env, argv) => {
             },
           ],
         },
+        {
+          test: /\.css$/i,
+          use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+          exclude: /node_modules/,
+        },
       ],
     },
     resolve: {
@@ -70,8 +76,11 @@ module.exports = (_env, argv) => {
       },
     },
     plugins: [
+      new MiniCssExtractPlugin({
+        filename: "[name].css",
+      }),
       new CopyPlugin({
-        patterns: [{ from: ".", to: "../", context: "public" }],
+        patterns: [{from: ".", to: "../", context: "public"}],
         options: {},
       }),
     ],

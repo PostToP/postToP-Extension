@@ -1,3 +1,4 @@
+import "../style/style.css";
 import {render} from "preact";
 import {CurrentlyPlayingData} from "./components/CurrentlyPlaying";
 
