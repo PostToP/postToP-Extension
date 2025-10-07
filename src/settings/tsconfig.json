@@ -7,13 +7,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
-  "include": [
-    "./**/*",
-    "../common/**/*"
-  ],
-  "exclude": [
-    "../background/**/*",
-    "../script/**/*",
-    "../popup/**/*"
-  ]
+  "include": ["./**/*", "../common/**/*"],
+  "exclude": ["../background/**/*", "../script/**/*", "../popup/**/*"]
 }

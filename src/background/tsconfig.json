@@ -5,13 +5,6 @@
     "outDir": "../../dist/js",
     "composite": true
   },
-  "include": [
-    "./**/*",
-    "../common/**/*"
-  ],
-  "exclude": [
-    "../popup/**/*",
-    "../script/**/*",
-    "../settings/**/*"
-  ]
+  "include": ["./**/*", "../common/**/*"],
+  "exclude": ["../popup/**/*", "../script/**/*", "../settings/**/*"]
 }
