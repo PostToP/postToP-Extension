@@ -4,7 +4,6 @@ import {chromeSendMessage} from "../Chrome";
 export function SettingsForm() {
   const [websocketStatus, setWebsocketStatus] = useState(0);
   const [serverAddress, setServerAddress] = useState("localhost:8000");
-  const [logLevel, setLogLevel] = useState("Info");
   const [ytEnabled, setYtEnabled] = useState(false);
   const [ytMusicEnabled, setYtMusicEnabled] = useState(false);
   useEffect(() => {
@@ -17,8 +16,7 @@ export function SettingsForm() {
     });
 
     chrome.storage.local.get(["settings"], result => {
-      const {logLevel, yt, ytmusic, serverAddress} = result.settings;
-      setLogLevel(logLevel ?? "Info");
+      const {yt, ytmusic, serverAddress} = result.settings;
       setYtEnabled(yt ?? false);
       setYtMusicEnabled(ytmusic ?? false);
       setServerAddress(serverAddress ?? "localhost:8000");
@@ -28,7 +26,6 @@ export function SettingsForm() {
   function handleSave(event: Event) {
     event.preventDefault();
     const settings = {
-      logLevel,
       yt: ytEnabled,
       ytmusic: ytMusicEnabled,
       serverAddress: serverAddress,
@@ -46,13 +43,6 @@ export function SettingsForm() {
         />
       </p>
       <p>WS status: {websocketStatus ? "Connected" : "Disconnected"}</p>
-      <p>
-        Logging Level:
-        <select name="log" value={logLevel} onChange={e => setLogLevel((e.target as HTMLSelectElement).value)}>
-          <option value="None">None</option>
-          <option value="Info">Info</option>
-        </select>
-      </p>
       <div>
         <p>
           Youtube:{" "}

@@ -18,8 +18,8 @@ export function connect() {
   };
 
   webSocket.onmessage = event => {
-    log.debug(`WebSocket received message`, event.data);
     const data = JSON.parse(event.data);
+    log.debug(`WebSocket received message`, data);
     handleAuthEvent(data);
     handleMusicQueryResponse(data);
   };
