@@ -59,4 +59,20 @@ export class SettingsRepository {
       }
     });
   }
+
+  static async observeSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
+    return new Promise((resolve, reject) => {
+      SettingsRepository.getSetting(key)
+        .then(value => {
+          resolve(value);
+        })
+        .catch(err => {
+          reject(err);
+        });
+
+      SettingsRepository.listenToSettingChanges(key, (newValue, oldValue) => {
+        resolve(newValue);
+      });
+    });
+  }
 }

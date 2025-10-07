@@ -31,9 +31,7 @@ chromeReceiveMessage("GET_CURRENTLY_PLAYING", () => ({
   value: currentlyListening.safe(),
 }));
 
-SettingsRepository.listenToSettingChanges("serverAddress", (newValue, oldValue) => {
-  if (newValue !== serverAddress) {
-    changeServerAddress(newValue);
-    restartWebsocket();
-  }
+SettingsRepository.observeSetting("serverAddress").then(value => {
+  changeServerAddress(value);
+  restartWebsocket();
 });
