@@ -1,4 +1,5 @@
 import {useEffect, useState} from "preact/compat";
+import {SettingsRepository} from "../../common/repository/SettingsRepository";
 import {chromeSendMessage} from "../Chrome";
 
 export function SettingsForm() {
@@ -15,8 +16,8 @@ export function SettingsForm() {
       }
     });
 
-    chrome.storage.local.get(["settings"], result => {
-      const {yt, ytmusic, serverAddress} = result.settings;
+    SettingsRepository.getSettings().then(settings => {
+      const {yt, ytmusic, serverAddress} = settings;
       setYtEnabled(yt ?? false);
       setYtMusicEnabled(ytmusic ?? false);
       setServerAddress(serverAddress ?? "localhost:8000");
@@ -30,7 +31,7 @@ export function SettingsForm() {
       ytmusic: ytMusicEnabled,
       serverAddress: serverAddress,
     };
-    chrome.storage.local.set({settings});
+    SettingsRepository.saveSettings(settings);
   }
   return (
     <form onSubmit={handleSave}>

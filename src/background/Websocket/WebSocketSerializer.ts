@@ -1,6 +1,9 @@
+import {SettingsRepository} from "../../common/repository/SettingsRepository";
 import {changeServerAddress, restartWebsocket} from "./WebSocket";
 
-chrome.storage.local.get(["settings"], result => {
-  changeServerAddress(result.settings.serverAddress);
-  restartWebsocket();
+SettingsRepository.getSetting("serverAddress").then(value => {
+  if (value) {
+    changeServerAddress(value);
+    restartWebsocket();
+  }
 });

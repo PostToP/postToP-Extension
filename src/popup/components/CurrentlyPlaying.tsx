@@ -1,19 +1,20 @@
 import {useEffect, useState} from "preact/compat";
 import {CurrentlyPlaying, VideoStatus} from "../../common/CurrentlyPlaying";
-import {getServerAddress} from "../../common/utils";
+import {AuthRepository} from "../../common/repository/AuthRepository";
+import {SettingsRepository} from "../../common/repository/SettingsRepository";
 import {chromeReceiveMessage, chromeSendMessage} from "../Chrome";
 import {log} from "../log";
 import {Time} from "./Time";
 
 async function submitReview(watchID: string, isMusic: boolean) {
-  const token = await chrome.storage.local.get("authToken");
-  const address = await getServerAddress();
+  const token = await AuthRepository.getAuthToken();
+  const address = await SettingsRepository.getSetting("serverAddress");
   const url = `http://${address}/review/music`;
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Token ${token.authToken}`,
+      Authorization: `Token ${token}`,
     },
     body: JSON.stringify({
       watchID: watchID,

@@ -1,3 +1,4 @@
+import {SettingsRepository} from "../common/repository/SettingsRepository";
 import {chromeReceiveMessage} from "./Chrome";
 import "./Websocket/WebSocketListener";
 import "./Websocket/WebSocketSerializer";
@@ -18,15 +19,17 @@ function handleUpdated(tabId: any, changeInfo: any, tabInfo: any) {
   }
 }
 
-chrome.storage.local.get(["settings"], result => {
-  listenOnYt = result.settings.yt;
-  listenOnYtMusic = result.settings.ytmusic;
+SettingsRepository.getSettings().then(settings => {
+  if (settings.yt !== undefined) listenOnYt = settings.yt;
+  if (settings.ytmusic !== undefined) listenOnYtMusic = settings.ytmusic;
 });
 
-chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace !== "local") return;
-  listenOnYt = changes.settings.newValue.yt;
-  listenOnYtMusic = changes.settings.newValue.ytmusic;
+SettingsRepository.listenToSettingChanges("yt", (newValue, oldValue) => {
+  listenOnYt = newValue ?? true;
+});
+
+SettingsRepository.listenToSettingChanges("ytmusic", (newValue, oldValue) => {
+  listenOnYtMusic = newValue ?? true;
 });
 
 chrome.tabs.onUpdated.addListener(handleUpdated);

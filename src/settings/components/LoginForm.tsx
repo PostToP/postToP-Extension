@@ -1,8 +1,9 @@
 import {useEffect, useState} from "preact/compat";
-import {getServerAddress} from "../../common/utils";
+import {AuthRepository} from "../../common/repository/AuthRepository";
+import {SettingsRepository} from "../../common/repository/SettingsRepository";
 
 async function sendLoginRequest(username: string, password: string) {
-  const address = await getServerAddress();
+  const address = await SettingsRepository.getSetting("serverAddress");
   const url = `http://${address}/auth`;
   const body = JSON.stringify({
     username: username,
@@ -20,15 +21,15 @@ async function sendLoginRequest(username: string, password: string) {
     throw new Error(`Login failed: ${res.statusText}`);
   }
   const data = await res.json();
-  chrome.storage.local.set({authToken: data.token});
+  await AuthRepository.saveAuthToken(data.token);
 }
 
 export function LoginForm() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    chrome.storage.local.get("authToken", result => {
-      if (result.authToken) {
+    AuthRepository.getAuthToken().then(token => {
+      if (token) {
         setLoggedIn(true);
       } else {
         setLoggedIn(false);
@@ -37,7 +38,7 @@ export function LoginForm() {
   }, []);
 
   function logOut() {
-    chrome.storage.local.remove("authToken", () => {
+    AuthRepository.removeAuthToken().then(() => {
       setLoggedIn(false);
       alert("Logged out successfully!");
     });

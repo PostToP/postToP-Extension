@@ -1,3 +1,4 @@
+import {SettingsRepository} from "../../common/repository/SettingsRepository";
 import {RequestOperationType} from "../../common/websocket";
 import {chromeReceiveMessage} from "../Chrome";
 import {
@@ -30,15 +31,9 @@ chromeReceiveMessage("GET_CURRENTLY_PLAYING", () => ({
   value: currentlyListening.safe(),
 }));
 
-chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (namespace !== "local") return;
-  let restart = false;
-  if (changes.settings.newValue.serverAddress !== serverAddress) {
-    changeServerAddress(changes.settings.newValue.serverAddress);
-    restart = true;
-  }
-
-  if (restart) {
+SettingsRepository.listenToSettingChanges("serverAddress", (newValue, oldValue) => {
+  if (newValue && newValue !== serverAddress) {
+    changeServerAddress(newValue);
     restartWebsocket();
   }
 });
