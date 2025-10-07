@@ -91,42 +91,26 @@ export function CurrentlyPlayingData() {
       {currentlyPlaying?.watchID && (
         <div key={currentlyPlaying}>
           <p>Currently playing:</p>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 2fr",
-              lineBreak: "anywhere",
-              wordBreak: "break-all",
-              gap: "10px",
-            }}>
-            <div
-              style={{
-                aspectRatio: "1/1",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "hidden",
-              }}>
-              <img
-                style={{
-                  width: "135%",
-                  height: "135%",
-                  objectFit: "cover",
-                }}
-                alt="Cover"
-                src={currentlyPlaying.cover}
-              />
+          <div className="grid grid-cols-[1fr_2fr] break-all gap-2.5">
+            <div className="aspect-square flex justify-center items-center overflow-hidden">
+              <img className="w-[135%] h-[135%] object-cover" alt="Cover" src={currentlyPlaying.cover} />
             </div>
             <div>
               <div>
                 Title:{" "}
-                <a href={`https://music.youtube.com/watch?v=${currentlyPlaying.watchID}`} target="_blank">
+                <a
+                  href={`https://music.youtube.com/watch?v=${currentlyPlaying.watchID}`}
+                  target="_blank"
+                  className="hover:underline">
                   {currentlyPlaying.trackName}
                 </a>
               </div>
               <div>
                 Artist:
-                <a href={`https://music.youtube.com/channel/${currentlyPlaying.artistID}`} target="_blank">
+                <a
+                  href={`https://music.youtube.com/channel/${currentlyPlaying.artistID}`}
+                  target="_blank"
+                  className="hover:underline">
                   {" "}
                   {currentlyPlaying.artistName}
                 </a>
@@ -141,11 +125,17 @@ export function CurrentlyPlayingData() {
                 {currentlyPlaying.isMusic?.reviewed && "(Reviewed)"}
               </div>
               {!currentlyPlaying.isMusic?.reviewed && (
-                <div>
-                  <button type="button" onClick={_ => handleReview(true)}>
+                <div className="mt-2">
+                  <button
+                    type="button"
+                    onClick={_ => handleReview(true)}
+                    className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded mr-2">
                     Yes
                   </button>
-                  <button type="button" onClick={_ => handleReview(false)}>
+                  <button
+                    type="button"
+                    onClick={_ => handleReview(false)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">
                     No
                   </button>
                 </div>
