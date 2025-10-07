@@ -2,6 +2,7 @@ import {CurrentlyPlaying} from "../../common/CurrentlyPlaying";
 import {RequestOperationType, ResponseOperationType, type VideoResponseData} from "../../common/websocket";
 import {chromeSendMessage} from "../Chrome";
 import {updateIcon} from "../icon";
+import {log} from "../log";
 
 export let webSocket: WebSocket | null = null;
 export let serverAddress: string = "localhost:8000";
@@ -11,20 +12,20 @@ export function connect() {
   webSocket = new WebSocket(`ws://${serverAddress}`);
 
   webSocket.onopen = _event => {
-    console.log("websocket open");
+    log.info("WebSocket connection established");
     heartbeat();
     updateIcon(true);
   };
 
   webSocket.onmessage = event => {
-    console.log(`websocket received message: ${event.data}`);
+    log.debug(`WebSocket received message`, event.data);
     const data = JSON.parse(event.data);
     handleAuthEvent(data);
     handleMusicQueryResponse(data);
   };
 
   webSocket.onclose = _event => {
-    console.log("websocket connection closed");
+    log.warn("WebSocket connection closed");
     webSocket = null;
     updateIcon(false);
   };
@@ -88,7 +89,7 @@ export function sendMessageToWebSocket(type: RequestOperationType, payload?: obj
     d: payload || {},
   };
   if (!webSocket || webSocket.readyState !== WebSocket.OPEN) {
-    console.log("WebSocket not open");
+    log.warn("WebSocket not open, cannot send message");
     return;
   }
   webSocket.send(JSON.stringify(data));

@@ -1,3 +1,5 @@
+import {log} from "./log";
+
 // @ts-expect-error
 if (!window.__postToPInjected) {
   // @ts-expect-error
@@ -5,4 +7,4 @@ if (!window.__postToPInjected) {
 } else {
   throw Error("Already injected");
 }
-console.log("content_script.ts called");
+log.info(`content_script.ts called`);

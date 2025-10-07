@@ -1,9 +1,9 @@
 import {type CurrentlyPlaying, VideoStatus} from "../common/CurrentlyPlaying";
-import {log} from "./Logging";
+import {log} from "./log";
 import {MusicService} from "./service/MusicService";
 
 export async function handleLoadedMetadata(strategy: typeof MusicService, currentlyPlaying: CurrentlyPlaying) {
-  log("New possible music detected");
+  log.debug("New possible music detected");
   const data = await strategy.pullData();
   currentlyPlaying.setValues({
     watchID: data.watchID,
@@ -13,7 +13,7 @@ export async function handleLoadedMetadata(strategy: typeof MusicService, curren
 }
 
 export async function handleEnded(currentlyPlaying: CurrentlyPlaying) {
-  log("Video ended");
+  log.debug("Video ended");
   currentlyPlaying.setValues({
     status: VideoStatus.ENDED,
   });
@@ -25,10 +25,10 @@ export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
     currentlyPlaying.status === VideoStatus.PLAYING ||
     currentlyPlaying.status === VideoStatus.ENDED
   ) {
-    log("Resume event ignored, already playing or ended");
+    log.debug("Resume event ignored, already playing or ended");
     return;
   }
-  log("Resume event detected");
+  log.debug("Resume event detected");
   currentlyPlaying.setValues({
     status: VideoStatus.PLAYING,
     time: MusicService.currentTime(),
@@ -36,7 +36,7 @@ export async function handleResume(currentlyPlaying: CurrentlyPlaying) {
 }
 
 export async function handlePause(currentlyPlaying: CurrentlyPlaying) {
-  log("Pause event detected");
+  log.debug("Pause event detected");
   currentlyPlaying.setValues({
     status: VideoStatus.PAUSED,
     time: MusicService.currentTime(),
@@ -44,13 +44,13 @@ export async function handlePause(currentlyPlaying: CurrentlyPlaying) {
 }
 
 export async function handleSeek(currentlyPlaying: CurrentlyPlaying) {
-  log("Seek event detected");
+  log.debug("Seek event detected");
   currentlyPlaying.setValues({
     time: MusicService.currentTime(),
   });
 }
 
 export async function handleAbort(currentlyPlaying: CurrentlyPlaying) {
-  log("Abort event detected");
+  log.debug("Abort event detected");
   currentlyPlaying.clear();
 }

@@ -3,7 +3,7 @@ import {CurrentlyPlaying, VideoStatus} from "../common/CurrentlyPlaying";
 import {chromeSendMessage} from "./Chrome";
 import {waitforElement} from "./DOM";
 import {handleAbort, handleEnded, handleLoadedMetadata, handlePause, handleResume, handleSeek} from "./Handlers";
-import {log} from "./Logging";
+import {log} from "./log";
 import type {MusicService} from "./service/MusicService";
 import Youtube from "./service/Youtube";
 import YoutubeMusic from "./service/YoutubeMusic";
@@ -14,7 +14,7 @@ function mount(videoElement: HTMLVideoElement) {
   if (hostname === "music.youtube.com") strategy = YoutubeMusic;
   else if (hostname === "www.youtube.com") strategy = Youtube;
   else {
-    log("Not a supported website");
+    log.warn(`Not a supported website: ${hostname}`);
     return;
   }
 
@@ -31,7 +31,7 @@ function mount(videoElement: HTMLVideoElement) {
   videoElement.addEventListener("abort", () => handleAbort(currentlyPlaying));
   videoElement.addEventListener("emptied", () => handleAbort(currentlyPlaying));
 
-  log("Succesfully mounted to video player");
+  log.info("Succesfully mounted to video player");
 
   let debounceTimeout: NodeJS.Timeout | null = null;
   currentlyPlaying.onUpdate(currentlyPlaying => {
@@ -51,7 +51,7 @@ function mount(videoElement: HTMLVideoElement) {
 function startMediaTracking() {
   waitforElement("video.video-stream")
     .then(v => mount(v as HTMLVideoElement))
-    .catch(e => log(e));
+    .catch(e => log.error(`Error mounting to video player`, e));
 }
 
 startMediaTracking();

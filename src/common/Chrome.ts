@@ -38,6 +38,6 @@ export type ChromeMessageFrom = "BACKGROUND" | "POPUP" | "CONTENT_SCRIPT" | "SET
 
 export type GetChromeMessage = "GET_CURRENTLY_PLAYING" | "GET_WEBSOCKET_STATUS";
 
-export type ActionChromeMessage = "VIDEO_UPDATE";
+export type ActionChromeMessage = "VIDEO_UPDATE" | "LOG";
 
 export type ChromeMessage = GetChromeMessage | ActionChromeMessage;

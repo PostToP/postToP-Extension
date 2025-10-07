@@ -2,6 +2,7 @@ import {useEffect, useState} from "preact/compat";
 import {CurrentlyPlaying, VideoStatus} from "../../common/CurrentlyPlaying";
 import {getServerAddress} from "../../common/utils";
 import {chromeReceiveMessage, chromeSendMessage} from "../Chrome";
+import {log} from "../log";
 import {Time} from "./Time";
 
 async function submitReview(watchID: string, isMusic: boolean) {
@@ -53,16 +54,16 @@ export function CurrentlyPlayingData() {
             newCP.setValues(response.value);
             return newCP;
           });
-          console.log("Currently playing:", response.value);
+          log.debug(`Currently playing data fetched`, response.value);
         }
       } catch (error) {
-        console.error("Error fetching currently playing:", error);
+        log.error(`Error fetching currently playing`, error);
       }
     };
     fetchCurrentlyPlaying();
 
     chromeReceiveMessage("VIDEO_UPDATE", request => {
-      console.log("Received VIDEO_UPDATE:", request);
+      log.debug("Received VIDEO_UPDATE", request);
       setCurrentlyPlaying(prev => {
         const newCP = prev ? CurrentlyPlaying.copy(prev) : new CurrentlyPlaying();
         newCP.setValues(request.value.value);
