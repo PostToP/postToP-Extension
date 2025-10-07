@@ -1,14 +1,26 @@
 interface Settings {
-  serverAddress?: string;
-  yt?: boolean;
-  ytmusic?: boolean;
+  serverAddress: string;
+  yt: boolean;
+  ytmusic: boolean;
 }
+
+const DEFAULT_SETTINGS: Settings = {
+  serverAddress: "localhost:8000",
+  yt: false,
+  ytmusic: false,
+};
 
 export class SettingsRepository {
   static getSettings(): Promise<Settings> {
     return new Promise(resolve => {
       chrome.storage.local.get(["settings"], result => {
-        resolve(result.settings || {});
+        const stored = result.settings || {};
+        const merged = {...DEFAULT_SETTINGS, ...stored};
+        resolve(merged);
+
+        if (!result.settings) {
+          chrome.storage.local.set({settings: merged});
+        }
       });
     });
   }
@@ -21,7 +33,7 @@ export class SettingsRepository {
     });
   }
 
-  static async getSetting<K extends keyof Settings>(key: K): Promise<Settings[K] | undefined> {
+  static async getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
     const settings = await SettingsRepository.getSettings();
     return settings[key];
   }
@@ -32,15 +44,9 @@ export class SettingsRepository {
     return SettingsRepository.saveSettings(settings);
   }
 
-  static async removeSetting<K extends keyof Settings>(key: K): Promise<void> {
-    const settings = await SettingsRepository.getSettings();
-    delete settings[key];
-    return SettingsRepository.saveSettings(settings);
-  }
-
   static async listenToSettingChanges<K extends keyof Settings>(
     key: K,
-    callback: (newValue: Settings[K] | undefined, oldValue: Settings[K] | undefined) => void,
+    callback: (newValue: Settings[K], oldValue: Settings[K]) => void,
   ): Promise<void> {
     chrome.storage.onChanged.addListener((changes, namespace) => {
       if (namespace !== "local") return;

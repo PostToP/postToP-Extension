@@ -4,7 +4,7 @@ import {chromeSendMessage} from "../Chrome";
 
 export function SettingsForm() {
   const [websocketStatus, setWebsocketStatus] = useState(0);
-  const [serverAddress, setServerAddress] = useState("localhost:8000");
+  const [serverAddress, setServerAddress] = useState("");
   const [ytEnabled, setYtEnabled] = useState(false);
   const [ytMusicEnabled, setYtMusicEnabled] = useState(false);
   useEffect(() => {
@@ -18,9 +18,9 @@ export function SettingsForm() {
 
     SettingsRepository.getSettings().then(settings => {
       const {yt, ytmusic, serverAddress} = settings;
-      setYtEnabled(yt ?? false);
-      setYtMusicEnabled(ytmusic ?? false);
-      setServerAddress(serverAddress ?? "localhost:8000");
+      setYtEnabled(yt);
+      setYtMusicEnabled(ytmusic);
+      setServerAddress(serverAddress);
     });
   }, []);
 

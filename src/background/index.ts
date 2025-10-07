@@ -20,16 +20,16 @@ function handleUpdated(tabId: any, changeInfo: any, tabInfo: any) {
 }
 
 SettingsRepository.getSettings().then(settings => {
-  if (settings.yt !== undefined) listenOnYt = settings.yt;
-  if (settings.ytmusic !== undefined) listenOnYtMusic = settings.ytmusic;
+  if (settings.yt) listenOnYt = settings.yt;
+  if (settings.ytmusic) listenOnYtMusic = settings.ytmusic;
 });
 
 SettingsRepository.listenToSettingChanges("yt", (newValue, oldValue) => {
-  listenOnYt = newValue ?? true;
+  listenOnYt = newValue;
 });
 
 SettingsRepository.listenToSettingChanges("ytmusic", (newValue, oldValue) => {
-  listenOnYtMusic = newValue ?? true;
+  listenOnYtMusic = newValue;
 });
 
 chrome.tabs.onUpdated.addListener(handleUpdated);

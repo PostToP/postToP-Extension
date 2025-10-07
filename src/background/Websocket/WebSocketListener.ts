@@ -32,7 +32,7 @@ chromeReceiveMessage("GET_CURRENTLY_PLAYING", () => ({
 }));
 
 SettingsRepository.listenToSettingChanges("serverAddress", (newValue, oldValue) => {
-  if (newValue && newValue !== serverAddress) {
+  if (newValue !== serverAddress) {
     changeServerAddress(newValue);
     restartWebsocket();
   }
