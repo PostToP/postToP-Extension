@@ -1,86 +1,42 @@
 import {useEffect, useState} from "preact/compat";
-import {AuthRepository} from "../../common/repository/AuthRepository";
-import {SettingsRepository} from "../../common/repository/SettingsRepository";
-
-async function sendLoginRequest(username: string, password: string) {
-  const address = await SettingsRepository.getSetting("serverAddress");
-  const url = `http://${address}/auth`;
-  const body = JSON.stringify({
-    username: username,
-    password: password,
-  });
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: body,
-  });
-  if (!res.ok) {
-    throw new Error(`Login failed: ${res.statusText}`);
-  }
-  const data = await res.json();
-  await AuthRepository.saveAuthToken(data.token);
-}
+import {authClient} from "../../common/auth";
 
 export function LoginForm() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    AuthRepository.getAuthToken().then(token => {
-      if (token) {
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
-      }
+    authClient.getSession().then(session => {
+      if (session.data?.session) setUser(session);
     });
   }, []);
 
   function logOut() {
-    AuthRepository.removeAuthToken().then(() => {
-      setLoggedIn(false);
-      alert("Logged out successfully!");
-    });
+    authClient.signOut();
+    setUser(null);
   }
 
-  function handleLoginSubmit(event: Event) {
-    event.preventDefault();
-    const form = event.target as HTMLFormElement;
-    const username = form.username.value;
-    const password = form.password.value;
-    sendLoginRequest(username, password)
-      .then(() => {
-        setLoggedIn(true);
-        alert("Login successful!");
-      })
-      .catch(error => {
-        console.error("Login error:", error);
-        alert(`Login failed: ${error.message}`);
-      });
+  function handleLoginSubmit() {
+    const currentURL = new URL(window.location.href);
+    authClient.signIn.social({
+      provider: "google",
+      scopes: ["openid", "email", "profile", "https://www.googleapis.com/auth/youtube.readonly"],
+      callbackURL: currentURL.origin + currentURL.pathname,
+    });
   }
 
   return (
     <>
-      {loggedIn ? (
+      {user ? (
         <p>
-          Logged in as TODO{" "}
+          Logged in as {user.data.user.name}.{" "}
           <button type="button" onClick={logOut}>
             Log out
           </button>
         </p>
       ) : (
-        <form onSubmit={handleLoginSubmit}>
-          <p>
-            Username: <input type="text" name="username"></input>
-          </p>
-          <p>
-            Password: <input type="password" name="password"></input>
-          </p>
-          <p>
-            <button type="submit">Login</button>
-          </p>
-        </form>
+        <button type="button" onClick={handleLoginSubmit}>
+          Sign in with Google
+        </button>
       )}
     </>
   );
