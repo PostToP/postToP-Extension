@@ -1,4 +1,3 @@
-import {authClient} from "../../common/auth";
 import {CurrentlyPlaying} from "../../common/CurrentlyPlaying";
 import {RequestOperationType, ResponseOperationType, type VideoResponseData} from "../../common/websocket";
 import {chromeSendMessage} from "../Chrome";
@@ -34,13 +33,12 @@ export function connect() {
 
 async function handleAuthEvent(data: any) {
   if (data.op === ResponseOperationType.DECLARE_INTENT) {
-    const session = await authClient.getSession();
-    const token = session.data?.session.token;
+    const token = await chrome.storage.local.get(["authToken"]);
     webSocket?.send(
       JSON.stringify({
         op: RequestOperationType.AUTH,
         d: {
-          token: token || "",
+          token: token.authToken || "",
         },
       }),
     );
