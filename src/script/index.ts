@@ -31,6 +31,11 @@ function mount(videoElement: HTMLVideoElement) {
   videoElement.addEventListener("abort", () => handleAbort(currentlyPlaying));
   videoElement.addEventListener("emptied", () => handleAbort(currentlyPlaying));
 
+  window.addEventListener("beforeunload", () => {
+    currentlyPlaying.clear();
+    chromeSendMessage("VIDEO_UPDATE", currentlyPlaying.safe());
+  });
+
   log.info("Succesfully mounted to video player");
 
   let debounceTimeout: NodeJS.Timeout | null = null;
