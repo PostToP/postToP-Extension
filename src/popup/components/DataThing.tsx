@@ -1,5 +1,5 @@
-import {useContext} from "preact/hooks";
-import {CurrentlyPlayingContext} from "../context/CurrentlyPlayingContext";
+import { useContext } from "preact/hooks";
+import { CurrentlyPlayingContext } from "../context/CurrentlyPlayingContext";
 
 export default function DataThing() {
   const currentlyPlaying = useContext(CurrentlyPlayingContext);
@@ -30,19 +30,27 @@ export default function DataThing() {
               <tbody>
                 <tr>
                   <td className="font-medium">Main Artist</td>
-                  <td className="text-right text-gray-700">TODO</td>
+                  <td className="text-right text-gray-700">{currentlyPlaying.NER?.ORIGINAL_AUTHOR[0] || "Unknown"}</td>
                 </tr>
                 <tr>
                   <td className="font-medium">Title</td>
-                  <td className="text-right text-gray-700">TODO</td>
+                  <td className="text-right text-gray-700">{currentlyPlaying.NER?.TITLE[0] || "Unknown"}</td>
                 </tr>
                 <tr>
                   <td className="font-medium">Featuring</td>
-                  <td className="text-right text-gray-700">TODO</td>
+                  <td className="text-right text-gray-700">{currentlyPlaying.NER?.FEATURING.join(", ") || "None"}</td>
                 </tr>
                 <tr>
                   <td className="font-medium">Vocal</td>
-                  <td className="text-right text-gray-700">TODO</td>
+                  <td className="text-right text-gray-700">{currentlyPlaying.NER?.VOCALIST.join(", ") || "None"}</td>
+                </tr>
+                <tr>
+                  <td className="font-medium">Album</td>
+                  <td className="text-right text-gray-700">{currentlyPlaying.NER?.ALBUM[0] || "Unknown"}</td>
+                </tr>
+                <tr>
+                  <td className="font-medium">Modifier</td>
+                  <td className="text-right text-gray-700">{currentlyPlaying.NER?.MODIFIER.join(", ") || "None"}</td>
                 </tr>
               </tbody>
             </table>

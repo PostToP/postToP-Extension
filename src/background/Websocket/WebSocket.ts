@@ -1,8 +1,8 @@
-import {CurrentlyPlaying} from "../../common/CurrentlyPlaying";
-import {RequestOperationType, ResponseOperationType, type VideoResponseData} from "../../common/websocket";
-import {chromeSendMessage} from "../Chrome";
-import {updateIcon} from "../icon";
-import {log} from "../log";
+import { CurrentlyPlaying } from "../../common/CurrentlyPlaying";
+import { RequestOperationType, ResponseOperationType, type VideoResponseData } from "../../common/websocket";
+import { chromeSendMessage } from "../Chrome";
+import { updateIcon } from "../icon";
+import { log } from "../log";
 
 export let webSocket: WebSocket | null = null;
 export let serverAddress: string = "localhost:8000";
@@ -56,6 +56,7 @@ async function handleMusicQueryResponse(data: any) {
     artistID: video.artist.handle,
     artistName: video.artist.name,
     isMusic: video.isMusic,
+    NER: video.NER,
   });
   chromeSendMessage("VIDEO_UPDATE", {
     value: currentlyListening.safe(),

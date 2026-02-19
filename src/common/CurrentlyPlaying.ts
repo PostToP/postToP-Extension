@@ -19,6 +19,17 @@ export class CurrentlyPlaying {
   length?: number;
   currentTime?: number;
   updatedAt?: number;
+  NER?: {
+    ORIGINAL_AUTHOR: string[];
+    TITLE: string[];
+    FEATURING: string[];
+    MODIFIER: string[];
+    VOCALOID: string[];
+    MISC_PERSON: string[];
+    VOCALIST: string[];
+    ALT_TITLE: string[];
+    ALBUM: string[];
+  }
 
   public static copy(copy: CurrentlyPlaying) {
     const newCurrentlyPlaying = new CurrentlyPlaying();
@@ -32,6 +43,7 @@ export class CurrentlyPlaying {
     newCurrentlyPlaying.length = copy.length;
     newCurrentlyPlaying.currentTime = copy.currentTime;
     newCurrentlyPlaying.updatedAt = copy.updatedAt;
+    newCurrentlyPlaying.NER = copy.NER;
     return newCurrentlyPlaying;
   }
 
@@ -47,6 +59,7 @@ export class CurrentlyPlaying {
     this.currentTime = args.currentTime ?? this.currentTime;
     this.time = args.time ?? this.currentTime;
     this.updatedAt = args.updatedAt ?? this.updatedAt;
+    this.NER = args.NER ?? this.NER;
     this.update();
   }
 
@@ -100,6 +113,7 @@ export class CurrentlyPlaying {
     this.length = undefined;
     this.currentTime = undefined;
     this.updatedAt = undefined;
+    this.NER = undefined;
     this.update();
   }
 
@@ -115,6 +129,7 @@ export class CurrentlyPlaying {
       length: this.length,
       currentTime: this.currentTime,
       updatedAt: this.updatedAt,
+      NER: this.NER,
     };
   }
 }

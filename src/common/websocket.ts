@@ -25,7 +25,7 @@ export interface WebSocketResponse {
   d: WebsocketData;
 }
 
-interface WebsocketData extends Object {}
+interface WebsocketData extends Object { }
 
 export interface VideoRequestData extends WebsocketData {
   watchID: string;
@@ -43,6 +43,7 @@ export interface VideoResponseData extends WebsocketData {
   duration: number;
   coverImage: string;
   isMusic: boolean;
+  NER: any;
 }
 
 export interface ListeingData extends WebsocketData {
