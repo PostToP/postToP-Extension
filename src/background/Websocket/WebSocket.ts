@@ -62,9 +62,17 @@ async function handleAuthEvent(data: any) {
   }
 }
 
+const videoInfoListeners: ((video: VideoResponseData) => void)[] = [];
+export function onVideoInfo(callback: (video: VideoResponseData) => void) {
+  videoInfoListeners.push(callback);
+}
+
 async function handleMusicQueryResponse(data: any) {
   if (data.op !== ResponseOperationType.VIDEO_UPDATE) return;
   const video = data.d.video as VideoResponseData;
+  videoInfoListeners.forEach(cb => {
+    cb(video);
+  });
   currentlyListening.setValues({
     watchID: video.watchID,
     cover: video.coverImage,

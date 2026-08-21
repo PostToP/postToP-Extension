@@ -1,6 +1,6 @@
 import {createContext} from "preact";
 import {useEffect, useState} from "preact/hooks";
-import {CurrentlyPlaying} from "../../common/CurrentlyPlaying";
+import {CurrentlyPlaying, VideoStatus} from "../../common/CurrentlyPlaying";
 import {AuthRepository} from "../../common/repository/AuthRepository";
 import {SettingsRepository} from "../../common/repository/SettingsRepository";
 import {chromeReceiveMessage, chromeSendMessage} from "../Chrome";
@@ -61,6 +61,10 @@ export default function CurrentlyPlayingProvider({children}: {children: preact.C
 
     chromeReceiveMessage("VIDEO_UPDATE", request => {
       log.debug("Received VIDEO_UPDATE", request);
+      if (Object.keys(request.value).length === 0) {
+        setCurrentlyPlaying(null);
+        return;
+      }
       updateCurrentlyPlaying(request.value.value);
     });
   }, []);

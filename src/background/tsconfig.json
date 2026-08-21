@@ -3,8 +3,18 @@
   "compilerOptions": {
     "rootDir": "..",
     "outDir": "../../dist/js",
-    "composite": true
+    "composite": true,
+    "types": [
+      "chrome"
+    ]
   },
-  "include": ["./**/*", "../common/**/*"],
-  "exclude": ["../popup/**/*", "../script/**/*", "../settings/**/*"]
+  "include": [
+    "./**/*",
+    "../common/**/*"
+  ],
+  "exclude": [
+    "../popup/**/*",
+    "../script/**/*",
+    "../settings/**/*"
+  ]
 }

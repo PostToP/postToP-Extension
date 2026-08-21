@@ -13,12 +13,12 @@ export function chromeSendMessageFactory(from: ChromeMessageFrom | null = null) 
 export function chromeReceiveMessageFactory(from: ChromeMessageFrom | null = null) {
   return function chromeReceiveMessage(
     op: ChromeMessage,
-    handler: (response: IChromeMessage) => IChromeResponse | void,
+    handler: (response: IChromeMessage, sender: chrome.runtime.MessageSender) => IChromeResponse | void,
   ) {
-    chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (from && request.from === from) return;
       if (request.op !== op) return;
-      const response = handler(request);
+      const response = handler(request, sender);
       if (response) sendResponse(response);
     });
   };
