@@ -1,3 +1,4 @@
+import {browser} from "../common/browser";
 import {SettingsRepository} from "../common/repository/SettingsRepository";
 import {chromeReceiveMessage} from "./Chrome";
 import "./Websocket/WebSocketListener";
@@ -5,8 +6,8 @@ import "./Websocket/WebSocketListener";
 let listenOnYt = true;
 let listenOnYtMusic = true;
 
-function injectScript(tabId: any) {
-  chrome.scripting.executeScript({
+function injectScript(tabId: number) {
+  browser.scripting.executeScript({
     target: {tabId: tabId},
     files: ["js/content_script.js"],
   });
@@ -21,20 +22,17 @@ function isTargetUrl(url: string): boolean {
   );
 }
 
-function handleUpdated(tabId: any, changeInfo: any, tabInfo: any) {
-  if (changeInfo.status === "complete" && isTargetUrl(tabInfo.url)) {
+function handleUpdated(tabId: number, changeInfo: chrome.tabs.OnUpdatedInfo, tabInfo: chrome.tabs.Tab) {
+  if (changeInfo.status === "complete" && tabInfo.url && isTargetUrl(tabInfo.url)) {
     injectScript(tabId);
   }
 }
 
-function injectIntoExistingTabs() {
-  chrome.tabs.query({}, (tabs: any) => {
-    tabs.forEach((tab: any) => {
-      if (isTargetUrl(tab.url)) {
-        injectScript(tab.id);
-      }
-    });
-  });
+async function injectIntoExistingTabs() {
+  const tabs = await browser.tabs.query({});
+  for (const tab of tabs) {
+    if (tab.id !== undefined && tab.url && isTargetUrl(tab.url)) injectScript(tab.id);
+  }
 }
 
 injectIntoExistingTabs();
@@ -47,7 +45,7 @@ SettingsRepository.observeSetting("ytmusic").then(value => {
   listenOnYtMusic = value;
 });
 
-chrome.tabs.onUpdated.addListener(handleUpdated);
+browser.tabs.onUpdated.addListener(handleUpdated);
 
 chromeReceiveMessage("LOG", req => {
   const {from, value} = req;

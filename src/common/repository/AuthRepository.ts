@@ -1,25 +1,16 @@
+import {browser} from "../browser";
+
 export class AuthRepository {
-  static getAuthToken(): Promise<string | null> {
-    return new Promise(resolve => {
-      chrome.storage.local.get("authToken", result => {
-        resolve(result.authToken || null);
-      });
-    });
+  static async getAuthToken(): Promise<string | null> {
+    const {authToken} = (await browser.storage.local.get("authToken")) as {authToken?: string};
+    return authToken || null;
   }
 
   static saveAuthToken(token: string): Promise<void> {
-    return new Promise(resolve => {
-      chrome.storage.local.set({authToken: token}, () => {
-        resolve();
-      });
-    });
+    return browser.storage.local.set({authToken: token});
   }
 
   static removeAuthToken(): Promise<void> {
-    return new Promise(resolve => {
-      chrome.storage.local.remove("authToken", () => {
-        resolve();
-      });
-    });
+    return browser.storage.local.remove("authToken");
   }
 }

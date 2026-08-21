@@ -1,3 +1,4 @@
+import {browser} from "../common/browser";
 import "../style/globals.css";
 import {render} from "preact";
 import {useEffect, useState} from "preact/hooks";
@@ -8,7 +9,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    chrome.storage.local.get(["authToken"]).then(result => {
+    browser.storage.local.get(["authToken"]).then(result => {
       if (result.authToken) {
         setLoggedIn(true);
       } else {
@@ -31,7 +32,7 @@ function App() {
         Please log in through the extension settings to view your currently playing media.
       </p>
       <button
-        onClick={() => chrome.runtime.openOptionsPage()}
+        onClick={() => browser.runtime.openOptionsPage()}
         className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium text-sm">
         Open Settings
       </button>

@@ -1,10 +1,11 @@
 import {useContext, useState} from "preact/hooks";
+import {browser} from "../common/browser";
 import {SettingsRepository} from "../common/repository/SettingsRepository";
 import {CurrentlyPlayingData} from "./components/CurrentlyPlaying";
 import {CurrentlyPlayingContext} from "./context/CurrentlyPlayingContext";
 
 export async function sendIsMusicReview(watchID: string, isMusic: boolean) {
-  const {authToken} = await chrome.storage.local.get("authToken");
+  const {authToken} = await browser.storage.local.get("authToken");
   const address = await SettingsRepository.getSetting("serverAddress");
   const url = `https://${address}/review/music`;
   fetch(url, {
@@ -22,7 +23,7 @@ export async function sendIsMusicReview(watchID: string, isMusic: boolean) {
 }
 
 export async function deleteIsMusicReview(watchID: string) {
-  const {authToken} = await chrome.storage.local.get("authToken");
+  const {authToken} = await browser.storage.local.get("authToken");
   const address = await SettingsRepository.getSetting("serverAddress");
   const url = `https://${address}/review/music`;
   fetch(url, {

@@ -1,3 +1,4 @@
+import {browser} from "../../common/browser";
 import {CurrentlyPlaying} from "../../common/CurrentlyPlaying";
 import {RequestOperationType, ResponseOperationType, type VideoResponseData} from "../../common/websocket";
 import {chromeSendMessage} from "../Chrome";
@@ -13,7 +14,7 @@ export async function connect() {
     log.warn("WebSocket already connected");
     return;
   }
-  const token = await chrome.storage.local.get(["authToken"]);
+  const token = await browser.storage.local.get(["authToken"]);
   if (!token.authToken) {
     log.warn("No auth token found, cannot connect to WebSocket");
     return;
@@ -50,7 +51,7 @@ export async function connect() {
 
 async function handleAuthEvent(data: any) {
   if (data.op === ResponseOperationType.DECLARE_INTENT) {
-    const token = await chrome.storage.local.get(["authToken"]);
+    const token = await browser.storage.local.get(["authToken"]);
     webSocket?.send(
       JSON.stringify({
         op: RequestOperationType.AUTH,

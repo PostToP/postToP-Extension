@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "webpack --config webpack/webpack.common.js --mode=development  --watch",
     "build": "webpack --config webpack/webpack.common.js --mode=production",
+    "build:chrome": "webpack --config webpack/webpack.common.js --mode=production --config-name=chrome",
+    "build:firefox": "webpack --config webpack/webpack.common.js --mode=production --config-name=firefox",
     "lint": "biome check",
     "format": "biome format --write"
   },
@@ -13,7 +15,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
     "@preact/preset-vite": "^2.10.2",
-    "@types/chrome": "^0.0.158",
+    "@types/chrome": "^0.2.6",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^7.1.2",
     "mini-css-extract-plugin": "^2.9.4",

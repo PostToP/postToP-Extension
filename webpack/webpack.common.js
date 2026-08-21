@@ -3,11 +3,13 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const srcDir = path.join(__dirname, "..", "src");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const {targets, buildManifest} = require("./manifest");
 
-module.exports = (_env, argv) => {
-  const isProduction = argv.mode === "production";
+module.exports = (_env, argv) => targets.map(target => config(target, argv.mode === "production"));
 
+function config(target, isProduction) {
   return {
+    name: target,
     entry: {
       background: path.join(srcDir, "background/index.ts"),
       content_script: path.join(srcDir, "script/index.ts"),
@@ -15,7 +17,7 @@ module.exports = (_env, argv) => {
       settings: path.join(srcDir, "settings/index.tsx"),
     },
     output: {
-      path: path.join(__dirname, "../dist/js"),
+      path: path.join(__dirname, "../dist", target, "js"),
       filename: "[name].js",
       clean: true,
     },
@@ -80,9 +82,17 @@ module.exports = (_env, argv) => {
         filename: "[name].css",
       }),
       new CopyPlugin({
-        patterns: [{from: ".", to: "../", context: "public"}],
+        patterns: [
+          {from: ".", to: "../", context: "public", globOptions: {ignore: ["**/manifest.json"]}},
+          {
+            from: "manifest.json",
+            to: "../manifest.json",
+            context: "public",
+            transform: content => buildManifest(content, target),
+          },
+        ],
         options: {},
       }),
     ],
   };
-};
+}

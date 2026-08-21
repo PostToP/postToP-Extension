@@ -1,12 +1,8 @@
+import {browser} from "./browser";
 export function chromeSendMessageFactory(from: ChromeMessageFrom | null = null) {
   return function chromeSendMessage(op: ChromeMessage, value?: any): Promise<IChromeResponse> {
     const message: IChromeMessage = {op, from, value};
-    return new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage(message, response => {
-        if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
-        else resolve(response as IChromeResponse);
-      });
-    });
+    return browser.runtime.sendMessage(message) as Promise<IChromeResponse>;
   };
 }
 
@@ -15,7 +11,7 @@ export function chromeReceiveMessageFactory(from: ChromeMessageFrom | null = nul
     op: ChromeMessage,
     handler: (response: IChromeMessage, sender: chrome.runtime.MessageSender) => IChromeResponse | void,
   ) {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (from && request.from === from) return;
       if (request.op !== op) return;
       const response = handler(request, sender);

@@ -1,3 +1,4 @@
+import {browser} from "../../common/browser";
 import {CurrentlyPlaying, VideoStatus} from "../../common/CurrentlyPlaying";
 import {SettingsRepository} from "../../common/repository/SettingsRepository";
 import {RequestOperationType} from "../../common/websocket";
@@ -33,7 +34,7 @@ chromeReceiveMessage("VIDEO_UPDATE", (data, sender) => {
   activate(owner);
 });
 
-chrome.tabs.onRemoved.addListener(tabId => {
+browser.tabs.onRemoved.addListener(tabId => {
   if (!tabStates.delete(tabId)) return;
   if (tabId === owningTabId) activate(electOwner());
 });

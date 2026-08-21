@@ -1,3 +1,5 @@
+import {browser} from "../browser";
+
 interface Settings {
   serverAddress: string;
   yt: boolean;
@@ -11,26 +13,17 @@ const DEFAULT_SETTINGS: Settings = {
 };
 
 export class SettingsRepository {
-  static getSettings(): Promise<Settings> {
-    return new Promise(resolve => {
-      chrome.storage.local.get(["settings"], result => {
-        const stored = result.settings || {};
-        const merged = {...DEFAULT_SETTINGS, ...stored};
-        resolve(merged);
+  static async getSettings(): Promise<Settings> {
+    const {settings} = (await browser.storage.local.get(["settings"])) as {settings?: Partial<Settings>};
+    const merged = {...DEFAULT_SETTINGS, ...settings};
 
-        if (!result.settings) {
-          chrome.storage.local.set({settings: merged});
-        }
-      });
-    });
+    if (!settings) await browser.storage.local.set({settings: merged});
+
+    return merged;
   }
 
   static saveSettings(settings: Settings): Promise<void> {
-    return new Promise(resolve => {
-      chrome.storage.local.set({settings}, () => {
-        resolve();
-      });
-    });
+    return browser.storage.local.set({settings});
   }
 
   static async getSetting<K extends keyof Settings>(key: K): Promise<Settings[K]> {
@@ -48,13 +41,13 @@ export class SettingsRepository {
     key: K,
     callback: (newValue: Settings[K], oldValue: Settings[K]) => void,
   ): Promise<void> {
-    chrome.storage.onChanged.addListener((changes, namespace) => {
+    browser.storage.onChanged.addListener((changes, namespace) => {
       if (namespace !== "local") return;
       if (changes.settings) {
-        const oldSettings = changes.settings.oldValue || {};
-        const newSettings = changes.settings.newValue || {};
+        const oldSettings: Partial<Settings> = changes.settings.oldValue || {};
+        const newSettings: Partial<Settings> = changes.settings.newValue || {};
         if (oldSettings[key] !== newSettings[key]) {
-          callback(newSettings[key], oldSettings[key]);
+          callback(newSettings[key] as Settings[K], oldSettings[key] as Settings[K]);
         }
       }
     });
