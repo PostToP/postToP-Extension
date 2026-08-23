@@ -27,6 +27,13 @@ chromeReceiveMessage("VIDEO_UPDATE", (data, sender) => {
     if (!state || state.watchID !== data.value.watchID) state = new CurrentlyPlaying();
     state.setValues(data.value);
     tabStates.set(tabId, state);
+
+    if (state.status === VideoStatus.ENDED) {
+      sendVideoUpdate(state);
+      tabStates.delete(tabId);
+      activate(electOwner());
+      return;
+    }
   }
 
   const owner = electOwner();
@@ -55,13 +62,8 @@ function activate(tabId: number | undefined) {
     sendMessageToWebSocket(RequestOperationType.VIDEO_UPDATE, {});
     currentlyListening.clear();
   } else {
-    const time = state.time;
     if (currentlyListening.watchID !== state.watchID) currentlyListening.clear();
-    sendMessageToWebSocket(RequestOperationType.VIDEO_UPDATE, {
-      watchID: state.watchID,
-      currentTime: time,
-      status: state.status,
-    });
+    const time = sendVideoUpdate(state);
     currentlyListening.setValues({
       watchID: state.watchID,
       time: time,
@@ -70,6 +72,16 @@ function activate(tabId: number | undefined) {
   }
 
   chromeSendMessage("VIDEO_UPDATE", {value: currentlyListening.safe()}).catch(() => {});
+}
+
+function sendVideoUpdate(state: CurrentlyPlaying) {
+  const time = state.time;
+  sendMessageToWebSocket(RequestOperationType.VIDEO_UPDATE, {
+    watchID: state.watchID,
+    currentTime: time,
+    status: state.status,
+  });
+  return time;
 }
 
 function electOwner() {

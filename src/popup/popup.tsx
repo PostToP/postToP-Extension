@@ -1,14 +1,14 @@
 import {useContext, useState} from "preact/hooks";
 import {browser} from "../common/browser";
 import {SettingsRepository} from "../common/repository/SettingsRepository";
+import {serverFetch} from "../common/serverUrl";
 import {CurrentlyPlayingData} from "./components/CurrentlyPlaying";
 import {CurrentlyPlayingContext} from "./context/CurrentlyPlayingContext";
 
 export async function sendIsMusicReview(watchID: string, isMusic: boolean) {
   const {authToken} = await browser.storage.local.get("authToken");
   const address = await SettingsRepository.getSetting("serverAddress");
-  const url = `https://${address}/review/music`;
-  fetch(url, {
+  serverFetch(address, "/review/music", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,8 +25,7 @@ export async function sendIsMusicReview(watchID: string, isMusic: boolean) {
 export async function deleteIsMusicReview(watchID: string) {
   const {authToken} = await browser.storage.local.get("authToken");
   const address = await SettingsRepository.getSetting("serverAddress");
-  const url = `https://${address}/review/music`;
-  fetch(url, {
+  serverFetch(address, "/review/music", {
     method: "DELETE",
     headers: {
       Authorization: `Token ${authToken}`,

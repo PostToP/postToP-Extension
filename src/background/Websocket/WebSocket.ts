@@ -1,5 +1,6 @@
 import {browser} from "../../common/browser";
 import {CurrentlyPlaying} from "../../common/CurrentlyPlaying";
+import {rememberInsecure, serverBases} from "../../common/serverUrl";
 import {RequestOperationType, ResponseOperationType, type VideoResponseData} from "../../common/websocket";
 import {chromeSendMessage} from "../Chrome";
 import {updateIcon} from "../icon";
@@ -8,6 +9,7 @@ import {log} from "../log";
 export let webSocket: WebSocket | null = null;
 export let serverAddress: string = "posttopserver.devla.dev";
 export const currentlyListening = new CurrentlyPlaying();
+let socketAttempt = 0;
 
 export async function connect() {
   if (webSocket) {
@@ -20,10 +22,15 @@ export async function connect() {
     return;
   }
 
-  webSocket = new WebSocket(`wss://${serverAddress}`);
+  const urls = serverBases(serverAddress, "ws");
+  const url = urls[Math.min(socketAttempt, urls.length - 1)];
+  webSocket = new WebSocket(url);
+  let opened = false;
 
   webSocket.onopen = _event => {
-    log.info("WebSocket connection established");
+    opened = true;
+    if (url.startsWith("ws://")) rememberInsecure(serverAddress);
+    log.info(`WebSocket connection established to ${url}`);
     heartbeat();
     updateIcon(true);
   };
@@ -36,6 +43,8 @@ export async function connect() {
   };
 
   webSocket.onclose = _event => {
+    // never opened means the scheme may be wrong; the next reconnect tries the plaintext one
+    socketAttempt = opened ? 0 : socketAttempt + 1;
     log.warn("WebSocket connection closed");
     webSocket = null;
     updateIcon(false);
@@ -97,6 +106,7 @@ function disconnectWebsocket() {
 
 export function changeServerAddress(url: string) {
   serverAddress = url;
+  socketAttempt = 0;
 }
 
 export function restartWebsocket() {

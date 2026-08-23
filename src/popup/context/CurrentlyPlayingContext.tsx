@@ -3,6 +3,7 @@ import {useEffect, useState} from "preact/hooks";
 import {CurrentlyPlaying, VideoStatus} from "../../common/CurrentlyPlaying";
 import {AuthRepository} from "../../common/repository/AuthRepository";
 import {SettingsRepository} from "../../common/repository/SettingsRepository";
+import {serverFetch} from "../../common/serverUrl";
 import {chromeReceiveMessage, chromeSendMessage} from "../Chrome";
 import {log} from "../log";
 
@@ -11,8 +12,7 @@ export const CurrentlyPlayingContext = createContext<CurrentlyPlaying | null>(nu
 async function submitReview(watchID: string, isMusic: boolean) {
   const token = await AuthRepository.getAuthToken();
   const address = await SettingsRepository.getSetting("serverAddress");
-  const url = `https://${address}/review/music`;
-  const res = await fetch(url, {
+  const res = await serverFetch(address, "/review/music", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,17 +1,17 @@
 import {useEffect, useState} from "preact/compat";
 import {AuthRepository} from "../../common/repository/AuthRepository";
 import {SettingsRepository} from "../../common/repository/SettingsRepository";
+import {serverFetch} from "../../common/serverUrl";
 import {chromeSendMessage} from "../Chrome";
 
 async function sendLoginRequest(username: string, password: string) {
   const address = await SettingsRepository.getSetting("serverAddress");
-  const url = `https://${address}/auth`;
   const body = JSON.stringify({
     username: username,
     password: password,
   });
 
-  const res = await fetch(url, {
+  const res = await serverFetch(address, "/auth", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
